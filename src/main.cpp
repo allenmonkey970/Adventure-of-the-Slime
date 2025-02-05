@@ -1,5 +1,5 @@
 #include <SFML/Graphics.hpp>
-
+#include "slime.h"
 int main()
 {
     auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "Adventure of Slime");
@@ -7,8 +7,7 @@ int main()
 
     while (window.isOpen())
     {
-        while (const std::optional event = window.pollEvent())
-        {
+        while (const std::optional event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>())
             {
                 window.close();
