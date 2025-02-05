@@ -7,6 +7,7 @@
 1. [Slime Pixel Set by Tienlev](https://tienlev.itch.io/slime-pixel-set)
 2. [Slime by TFWAGames](https://tfwagames.itch.io/slime)
 3. [Cave Tileset by The Pixel Nook](https://the-pixel-nook.itch.io/cave-tileset-free)
+4. [Edited Slime animation top down pixel art](https://opengameart.org/content/slime-animationstop-down-pixel-art)
 
 ### Sound Effects
 
@@ -20,3 +21,4 @@ A big thank you to:
 - Tienlev for the Slime Pixel Set
 - TFWAGames for the Slime's Weapon assets
 - The Pixel Nook for the Cave Tileset
+- Thanks to TaniCorn for his top down art of a slime
