@@ -8,13 +8,13 @@
 
 class slime {
 public:
-    void idle() {
+    slime() : idle0FileName("assets/slime/Idle/0.png"), idle0(), idle0Sprite(idle0) {
         if (!idle0.loadFromFile(idle0FileName)) {
             std::cout << "Cannot load image idle0 \n";
         }
-        idle0Sprite.setTexture(idle0);
         // Define the texture rectangle using IntRect
-        idle0Sprite.setTextureRect(sf::IntRect({10, 10}, {19, 15}));
+        idle0Sprite.setTextureRect(sf::IntRect({30, 30}, {19, 15}));
+        idle0Sprite.setScale({1,1});
     }
 
     void draw(sf::RenderWindow &window) {
@@ -24,7 +24,7 @@ public:
 private:
     sf::Texture idle0;
     sf::Sprite idle0Sprite;
-    std::string idle0FileName = "assets/slime/Idle/0.png";
+    std::string idle0FileName;
 };
 
-#endif //SLIME_H
+#endif // SLIME_H
