@@ -1,5 +1,7 @@
 # Adventure-of-Slime
 
+## Animation
+I updated [Jfeatherstone animation manager](https://github.com/Jfeatherstone/SFMLAnimation?tab=readme-ov-file) to 3.0
 ## Assets
 
 ### Graphics
@@ -22,3 +24,4 @@ A big thank you to:
 - TFWAGames for the Slime's Weapon assets
 - The Pixel Nook for the Cave Tileset
 - Thanks to TaniCorn for his top down art of a slime
+- Big thanks to Jfeatherstone for his animation manager
