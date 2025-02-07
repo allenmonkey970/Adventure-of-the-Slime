@@ -12,6 +12,8 @@ public:
         } else {
             sprite.setTexture(texture); // Set the texture to the sprite
             AnimationManager::addAnimation("walk", texture, {1, 1}, {19, 15});
+
+            sprite.setScale(sf::Vector2f(2.0f, 2.0f));
         }
     }
 
