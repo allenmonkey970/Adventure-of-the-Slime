@@ -11,7 +11,7 @@ public:
             std::cerr << "Failed to load texture\n";
         } else {
             sprite.setTexture(texture); // Set the texture to the sprite
-            AnimationManager::addAnimation("walk", texture, {3, 1}, {19, 15});
+            AnimationManager::addAnimation("walk", texture, {1, 1}, {19, 15});
         }
     }
 
