@@ -11,7 +11,7 @@ public:
             std::cerr << "Failed to load texture\n";
         } else {
             sprite.setTexture(texture); // Set the texture to the sprite
-            AnimationManager::addAnimation("hit", texture, {7, 1}, {32, 32}, {0, 0}, 3);
+            AnimationManager::addAnimation("hit", texture, {7, 1}, {40, 32}, {0, 0}, 3);
             sprite.setScale({2, 2});
         }
     }
