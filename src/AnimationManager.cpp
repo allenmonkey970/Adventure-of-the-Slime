@@ -24,22 +24,24 @@ void AnimationManager::update(const std::string &animation, sf::Sprite &sprite) 
                                  m_indicies[animation].y * m_spriteSizes[animation].y
                              },
                              {m_spriteSizes[animation].x, m_spriteSizes[animation].y});
-            // Update frame index
-            if (++m_indicies[animation].y >= m_sheetSizes[animation].y) {
-                m_indicies[animation].y = 0;
-                if (++m_indicies[animation].x >= m_sheetSizes[animation].x) {
-                    m_indicies[animation].x = 0;
-                }
-            }
             // Apply texture and texture rectangle to the sprite
             sprite.setTexture(m_textures[animation]);
             sprite.setTextureRect(rect);
+
+            // Update frame index
+            if (m_indicies[animation].y < m_sheetSizes[animation].y - 1) {
+                ++m_indicies[animation].y;
+            } else if (m_indicies[animation].x < m_sheetSizes[animation].x - 1) {
+                m_indicies[animation].y = 0;
+                ++m_indicies[animation].x;
+            }
         }
     } else {
         // Error handling if the animation entry does not exist
         std::cerr << "No animation entry found for \"" << animation << "\"!" << std::endl;
     }
 }
+
 
 void AnimationManager::updateAll(std::map<std::string, sf::Sprite> &map) {
     // Iterate through all animations in the map and update each one
