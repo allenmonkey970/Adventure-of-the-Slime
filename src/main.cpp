@@ -5,9 +5,9 @@ int main() {
     auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "Adventure of Slime");
     window.setFramerateLimit(60);
 
-    slime mainSlime;
+    Slime mainSlime;
     while (window.isOpen()) {
-        while (const std::optional event = window.pollEvent()) {
+        while (const std::optional<sf::Event> event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) {
                 window.close();
             }

@@ -1,30 +1,26 @@
-// Created by antho on 2/5/2025.
-
-#ifndef SLIME_H
-#define SLIME_H
-
+#pragma once
 #include <SFML/Graphics.hpp>
+#include "AnimationManager.h"
 #include <iostream>
 
-class slime {
+class Slime {
 public:
-    slime() : idle0FileName("assets/slime/Idle/0.png"), idle0(), idle0Sprite(idle0) {
-        if (!idle0.loadFromFile(idle0FileName)) {
-            std::cout << "Cannot load image idle0 \n";
+    Slime() : sprite(texture) {
+        // Load texture and set up animations
+        if (!texture.loadFromFile("assets/slime/walking/sideways/0.png")) {
+            std::cerr << "Failed to load texture\n";
+        } else {
+            sprite.setTexture(texture); // Set the texture to the sprite
+            AnimationManager::addAnimation("walk", texture, {3, 1}, {19, 15});
         }
-        // Define the texture rectangle using IntRect
-        idle0Sprite.setTextureRect(sf::IntRect({30, 30}, {19, 15}));
-        idle0Sprite.setScale({1,1});
     }
 
-    void draw(sf::RenderWindow &window) {
-        window.draw(idle0Sprite);
+    void draw(sf::RenderWindow& window) {
+        AnimationManager::update("walk", sprite);
+        window.draw(sprite);
     }
 
 private:
-    sf::Texture idle0;
-    sf::Sprite idle0Sprite;
-    std::string idle0FileName;
+    sf::Sprite sprite;
+    sf::Texture texture;
 };
-
-#endif // SLIME_H
