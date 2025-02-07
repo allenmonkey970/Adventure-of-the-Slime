@@ -16,7 +16,7 @@ public:
     }
 
     void draw(sf::RenderWindow& window) {
-        AnimationManager::update("idle", sprite);
+        AnimationManager::update("swallow", sprite);
         window.draw(sprite);
     }
 
