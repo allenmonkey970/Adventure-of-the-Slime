@@ -14,22 +14,27 @@ std::map<std::string, int> AnimationManager::m_timesUpdated;
 void AnimationManager::update(const std::string &animation, sf::Sprite &sprite) {
     // Check if the animation entry exists
     if (m_sheetSizes[animation] != sf::Vector2i(0, 0)) {
-        // Calculate the texture rectangle for the current frame
-        sf::IntRect rect({
-                             m_indicies[animation].x * m_spriteSizes[animation].x,
-                             m_indicies[animation].y * m_spriteSizes[animation].y
-                         },
-                         {m_spriteSizes[animation].x, m_spriteSizes[animation].y});
-        // Update frame index
-        if (++m_indicies[animation].y >= m_sheetSizes[animation].y) {
-            m_indicies[animation].y = 0;
-            if (++m_indicies[animation].x >= m_sheetSizes[animation].x) {
-                m_indicies[animation].x = 0;
+        // Increment the update counter for the animation
+        if (++m_timesUpdated[animation] >= m_frequencies[animation]) {
+            // Reset the update counter
+            m_timesUpdated[animation] = 0;
+            // Calculate the texture rectangle for the current frame
+            sf::IntRect rect({
+                                 m_indicies[animation].x * m_spriteSizes[animation].x,
+                                 m_indicies[animation].y * m_spriteSizes[animation].y
+                             },
+                             {m_spriteSizes[animation].x, m_spriteSizes[animation].y});
+            // Update frame index
+            if (++m_indicies[animation].y >= m_sheetSizes[animation].y) {
+                m_indicies[animation].y = 0;
+                if (++m_indicies[animation].x >= m_sheetSizes[animation].x) {
+                    m_indicies[animation].x = 0;
+                }
             }
+            // Apply texture and texture rectangle to the sprite
+            sprite.setTexture(m_textures[animation]);
+            sprite.setTextureRect(rect);
         }
-        // Apply texture and texture rectangle to the sprite
-        sprite.setTexture(m_textures[animation]);
-        sprite.setTextureRect(rect);
     } else {
         // Error handling if the animation entry does not exist
         std::cerr << "No animation entry found for \"" << animation << "\"!" << std::endl;
