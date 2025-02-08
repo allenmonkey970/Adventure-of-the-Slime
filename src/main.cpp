@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Keyboard.hpp>
-#include "TileMap.h"
+#include "tileMap.h"
 #include "slime.h"
 #include "icon.h"
 #include <iostream>
@@ -28,9 +28,14 @@ int main() {
 
     std::cout << "Tile map loaded successfully.\n";
 
+    const float moveSpeed = 5.f; // Adjust the speed as needed
+
+    // Create and initialize the view
+    sf::View view(sf::Vector2f(960.f, 540.f), sf::Vector2f(1920.f, 1080.f));
+    view.setCenter(mainSlime.getPosition());
+
     while (window.isOpen()) {
         while (const std::optional<sf::Event> event = window.pollEvent()) {
-            constexpr float moveSpeed = 5.f; // Adjust the speed as needed
             if (event->is<sf::Event::Closed>()) window.close();
 
             // Handle keyboard input for movement
@@ -47,7 +52,7 @@ int main() {
                 mainSlime.move({0.f, moveSpeed});
             }
 
-
+            // Handle scale changes
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
                 mainSlime.setScale("hit", {3, 3});
             }
@@ -56,7 +61,11 @@ int main() {
             }
         }
 
+        // Update view position to follow the player
+        view.setCenter(mainSlime.getPosition());
+
         window.clear();
+        window.setView(view);
         window.draw(map);
         mainSlime.draw(window);
         window.display();

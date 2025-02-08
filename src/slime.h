@@ -34,6 +34,10 @@ public:
         sprite.move(offset);
     }
 
+    sf::Vector2f getPosition() const {
+        return sprite.getPosition();
+    }
+
 private:
     sf::Sprite sprite;
     sf::Texture hitTexture;
