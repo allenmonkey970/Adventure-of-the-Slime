@@ -21,6 +21,7 @@ public:
             sprite.setTexture(deathTexture);
         }
         currentAnimation = animationName;
+        AnimationManager::resetAnimationIndex(currentAnimation);
         sprite.setScale(scale);
     }
 

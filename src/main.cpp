@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Window/Keyboard.hpp>
 #include "slime.h"
 #include "icon.h"
 
@@ -11,13 +12,20 @@ int main() {
 
 
     Slime mainSlime;
-    mainSlime.setScale("hit", {3, 3});
 
 
     while (window.isOpen()) {
         while (const std::optional<sf::Event> event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) {
                 window.close();
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
+            {
+                mainSlime.setScale("hit", {3, 3});
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
+            {
+                mainSlime.setScale("idle", {3, 3});
             }
         }
 
