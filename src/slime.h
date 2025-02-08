@@ -36,7 +36,7 @@ private:
     sf::Texture deathTexture;
     std::string currentAnimation;
 
-    void setupAnimation(sf::Texture& texture, const std::string& filePath, const std::string& animationName, sf::Vector2i frameCount, sf::Vector2i frameSize, sf::Vector2i startPosition, int speed) {
+    static void setupAnimation(sf::Texture& texture, const std::string& filePath, const std::string& animationName, sf::Vector2i frameCount, sf::Vector2i frameSize, sf::Vector2i startPosition, int speed) {
         if (!texture.loadFromFile(filePath)) {
             std::cerr << "Failed to load texture: " << filePath << "\n";
         } else {
