@@ -14,7 +14,8 @@ FetchContent_MakeAvailable(SFML)
 
 add_executable(main src/main.cpp
         src/AnimationManager.cpp
-        src/icon.h)
+        src/icon.h
+        src/tileMap.h)
 target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(main PRIVATE SFML::Graphics)
 

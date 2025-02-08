@@ -30,6 +30,10 @@ public:
         window.draw(sprite);
     }
 
+    void move(const sf::Vector2f& offset) {
+        sprite.move(offset);
+    }
+
 private:
     sf::Sprite sprite;
     sf::Texture hitTexture;
