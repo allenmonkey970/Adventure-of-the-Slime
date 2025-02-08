@@ -13,7 +13,7 @@ I updated [Jfeatherstone animation manager](https://github.com/Jfeatherstone/SFM
 
 ### Sound Effects
 
-I created all sound effects using an 8-bit sound creator.
+I created all sound effects using an 8-bit sound creator called [jsfxr](https://sfxr.me/).
 
 ---
 
