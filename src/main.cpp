@@ -3,7 +3,7 @@
 #include "icon.h"
 
 int main() {
-    auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "Adventure of Slime");
+    auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "Adventure of the Slime");
     window.setFramerateLimit(30);
     window.setVerticalSyncEnabled(true);
     Icon icon;
