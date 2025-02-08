@@ -5,7 +5,7 @@
 
 class Slime {
 public:
-    Slime() : sprite(hitTexture) {
+    Slime() : sprite(idleTexture) {
         setupAnimation(hitTexture, "assets/slime/hit/damage.png", "hit", {7, 1}, {40, 32}, {0, 0}, 3);
         setupAnimation(idleTexture, "assets/slime/Idle/idle.png", "idle", {7, 1}, {30, 27}, {0, 0}, 3);
         setupAnimation(deathTexture, "assets/slime/Death/death.png", "death", {6, 1}, {55, 45}, {0, 0}, 2);
