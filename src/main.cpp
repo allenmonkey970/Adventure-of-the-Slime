@@ -3,7 +3,7 @@
 
 int main() {
     auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "Adventure of Slime");
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(30);
 
     Slime mainSlime;
     while (window.isOpen()) {
