@@ -1,4 +1,4 @@
-# Adventure-of-Slime
+# Adventure-of-the-Slime
 
 ## Animation
 I updated [Jfeatherstone animation manager](https://github.com/Jfeatherstone/SFMLAnimation?tab=readme-ov-file) to SFML 3.0
