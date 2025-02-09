@@ -6,7 +6,6 @@
 #include <iostream>
 
 int main() {
-    // create the window
     sf::RenderWindow window(sf::VideoMode({1920u, 1080u}), "Adventure of the Slime");
     window.setFramerateLimit(30);
     window.setVerticalSyncEnabled(true);
@@ -19,7 +18,7 @@ int main() {
 
     Slime mainSlime;
 
-    // create the tilemap from the level definition
+    // Create the tilemap from the level definition
     TileMap map;
     if (!map.loadFromFile("assets/map.txt", "assets/tileMap.png", {32, 32})) {
         std::cerr << "Failed to load tile map from file.\n";
@@ -28,28 +27,34 @@ int main() {
 
     std::cout << "Tile map loaded successfully.\n";
 
-    const float moveSpeed = 5.f; // Adjust the speed as needed
 
-    // Create and initialize the view
     sf::View view(sf::Vector2f(960.f, 540.f), sf::Vector2f(1920.f, 1080.f));
     view.setCenter(mainSlime.getPosition());
 
     while (window.isOpen()) {
         while (const std::optional<sf::Event> event = window.pollEvent()) {
+            constexpr float moveSpeed = 5.f; // Adjust the speed as needed
             if (event->is<sf::Event::Closed>()) window.close();
 
+            sf::Vector2f movement(0.f, 0.f);
             // Handle keyboard input for movement
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
-                mainSlime.move({-moveSpeed, 0.f});
+                movement.x -= moveSpeed;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
-                mainSlime.move({moveSpeed, 0.f});
+                movement.x += moveSpeed;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
-                mainSlime.move({0.f, -moveSpeed});
+                movement.y -= moveSpeed;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
-                mainSlime.move({0.f, moveSpeed});
+                movement.y += moveSpeed;
+            }
+
+            // Check collision
+            sf::Vector2f newPos = mainSlime.getPosition() + movement;
+            if (!map.isCollision(newPos, {32, 32})) {
+                mainSlime.move(movement);
             }
 
             // Handle scale changes
