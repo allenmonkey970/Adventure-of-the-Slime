@@ -21,7 +21,7 @@ int main() {
 
     // Create the tilemap from the level definition
     TileMap map;
-    if (!map.loadFromFile("assets/maps/map.txt", "assets/cave/tileSet.png", {32, 32})) {
+    if (!map.loadFromFile("assets/maps/map.txt", "assets/cave/tileSet.png", {42, 42})) {
         std::cerr << "Failed to load tile map from file.\n";
         return -1;
     }
