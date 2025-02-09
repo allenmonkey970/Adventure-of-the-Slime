@@ -2,6 +2,8 @@
 
 ## Animation
 I updated [Jfeatherstone animation manager](https://github.com/Jfeatherstone/SFMLAnimation?tab=readme-ov-file) to SFML 3.0 with some tweaks to the code.
+### My GitHub Version
+Check out my project version on [GitHub](https://github.com/allenmonkey970/SFML-Animation-3.0).
 ## Assets
 
 ### Graphics
