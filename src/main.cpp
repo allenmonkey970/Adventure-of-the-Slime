@@ -53,12 +53,13 @@ int main() {
         }
 
         sf::Vector2f movement(0.f, 0.f);
-        constexpr float moveSpeed = 5.f; // Adjust the speed as needed
+        constexpr float horizontalMoveSpeed = 3.f; // Reduced speed for left/right movement
+        constexpr float verticalMoveSpeed = 5.f; // Original speed for up/down movement
         bool isMoving = false;
 
         // Handle continuous keyboard input for movement
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-            movement.x -= moveSpeed;
+            movement.x -= horizontalMoveSpeed;
             if (currentAnimation != "moveLeft") {
                 mainSlime.setScale("moveLeft", {1.f, 1.f});
                 currentAnimation = "moveLeft";
@@ -66,7 +67,7 @@ int main() {
             isMoving = true;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-            movement.x += moveSpeed;
+            movement.x += horizontalMoveSpeed;
             if (currentAnimation != "moveRight") {
                 mainSlime.setScale("moveRight", {1.f, 1.f});
                 currentAnimation = "moveRight";
@@ -74,7 +75,7 @@ int main() {
             isMoving = true;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-            movement.y -= moveSpeed;
+            movement.y -= verticalMoveSpeed;
             if (currentAnimation != "moveUp") {
                 mainSlime.setScale("moveUp", {1.f, 1.f});
                 currentAnimation = "moveUp";
@@ -82,7 +83,7 @@ int main() {
             isMoving = true;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-            movement.y += moveSpeed;
+            movement.y += verticalMoveSpeed;
             if (currentAnimation != "moveDown") {
                 mainSlime.setScale("moveDown", {1.f, 1.f});
                 currentAnimation = "moveDown";
@@ -100,7 +101,6 @@ int main() {
         if (!map.isCollision(newPos, {32, 32})) {
             mainSlime.move(movement);
         }
-
 
         float animationDeltaTime = animationClock.getElapsedTime().asSeconds();
 
