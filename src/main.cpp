@@ -109,7 +109,6 @@ int main() {
         if (animationDeltaTime >= animationUpdateInterval) {
             animationClock.restart();
             mainSlime.updateAnimation();
-            std::cout << "Animation updated: " << currentAnimation << std::endl;
         }
 
         // Update view position to follow the player

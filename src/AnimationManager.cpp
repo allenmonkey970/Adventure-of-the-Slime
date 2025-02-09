@@ -31,8 +31,6 @@ void AnimationManager::update(const std::string &animation, sf::Sprite &sprite) 
             } else {
                 m_indices[animation] = m_startingIndices[animation]; // Reset to starting index for looping animation
             }
-
-            std::cout << "Animation frame updated: " << animation << " to frame (" << m_indices[animation].x << ", " << m_indices[animation].y << ")" << std::endl;
         }
     } else {
         std::cerr << "No animation entry found for \"" << animation << "\"!" << std::endl;
