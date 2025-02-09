@@ -16,6 +16,9 @@ Check out my project version on [GitHub](https://github.com/allenmonkey970/SFML-
 ### Sound Effects
 
 I created all sound effects using an 8-bit sound creator called [jsfxr](https://sfxr.me/).
+## Music
+Cave Music by <a href="https://pixabay.com/users/deuslower-45666444/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=277034">Vlad Bakutov</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=277034">Pixabay</a>
+Outdoors Music by <a href="https://pixabay.com/users/deuslower-45666444/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=236809">Vlad Bakutov</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=236809">Pixabay</a>
 
 ---
 
