@@ -3,7 +3,6 @@
 #include "AnimationManager.h"
 #include <iostream>
 
-
 class Slime {
 public:
     Slime() : sprite(idleTexture), currentAnimation("idle") {
@@ -20,24 +19,7 @@ public:
     }
 
     void setScale(const std::string& animationName, const sf::Vector2f& scale) {
-        if (animationName == "hit") {
-            sprite.setTexture(hitTexture);
-        } else if (animationName == "idle") {
-            sprite.setTexture(idleTexture);
-        } else if (animationName == "death") {
-            sprite.setTexture(deathTexture);
-        } else if (animationName == "moveDown") {
-            sprite.setTexture(moveDownTexture);
-        } else if (animationName == "moveRight") {
-            sprite.setTexture(moveRightTexture);
-            sprite.setScale(scale);
-        } else if (animationName == "moveLeft") {
-            sprite.setTexture(moveLeftTexture); // Use the same texture as moveRight
-            sf::Vector2f flippedScale(-scale.x, scale.y); // Create a flipped scale vector
-            sprite.setScale(flippedScale); // Flip horizontally for left movement
-        } else if (animationName == "moveUp") {
-            sprite.setTexture(moveUpTexture);
-        }
+        setTexture(animationName, scale);
         currentAnimation = animationName;
         AnimationManager::resetAnimationIndex(currentAnimation);
     }
@@ -55,6 +37,10 @@ public:
         return sprite.getPosition();
     }
 
+    void updateAnimation() {
+        AnimationManager::update(currentAnimation, sprite);
+    }
+
 private:
     sf::Sprite sprite;
     sf::Texture hitTexture;
@@ -66,7 +52,29 @@ private:
     sf::Texture moveUpTexture;
     std::string currentAnimation;
 
-    static void setupAnimation(sf::Texture& texture, const std::string& animationName, const std::string& filePath, sf::Vector2i frameCount, sf::Vector2i frameSize, sf::Vector2i startPosition, int speed) {
+    void setTexture(const std::string& animationName, const sf::Vector2f& scale) {
+        if (animationName == "hit") {
+            sprite.setTexture(hitTexture);
+        } else if (animationName == "idle") {
+            sprite.setTexture(idleTexture);
+        } else if (animationName == "death") {
+            sprite.setTexture(deathTexture);
+        } else if (animationName == "moveDown") {
+            sprite.setTexture(moveDownTexture);
+        } else if (animationName == "moveRight") {
+            sprite.setTexture(moveRightTexture);
+            sprite.setScale(scale);
+        } else if (animationName == "moveLeft") {
+            sprite.setTexture(moveLeftTexture);
+            sprite.setScale({-scale.x, scale.y}); // Flip horizontally for left movement
+        } else if (animationName == "moveUp") {
+            sprite.setTexture(moveUpTexture);
+        }
+    }
+
+    static void setupAnimation(sf::Texture& texture, const std::string& animationName,
+                               const std::string& filePath, sf::Vector2i frameCount,
+                               sf::Vector2i frameSize, sf::Vector2i startPosition, int speed) {
         if (!texture.loadFromFile(filePath)) {
             std::cerr << "Failed to load texture: " << filePath << "\n";
         } else {
