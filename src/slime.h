@@ -13,8 +13,8 @@ public:
 
         // Movement animations
         setupAnimation(moveDownTexture, "moveDown", "assets/slime/walking/down/walkingDown.png", {3, 1}, {42, 42}, {0, 0}, 2);
-        setupAnimation(moveRightTexture, "moveRight", "assets/slime/walking/sideways/WalkingSideways.png", {8, 1}, {30, 28}, {0, 0}, 3);
-        setupAnimation(moveLeftTexture, "moveLeft", "assets/slime/walking/sideways/WalkingSideways.png", {8, 1}, {30, 28}, {0, 0}, 3); // Added moveLeft
+        setupAnimation(moveRightTexture, "moveRight", "assets/slime/walking/sideways/WalkingSideways.png", {7, 1}, {30, 28}, {0, 0}, 3);
+        setupAnimation(moveLeftTexture, "moveLeft", "assets/slime/walking/sideways/WalkingSideways.png", {7, 1}, {30, 28}, {0, 0}, 3);
         setupAnimation(moveUpTexture, "moveUp", "assets/slime/walking/up/walkingUpwards.png", {3, 1}, {42, 42}, {0, 0}, 3);
         sprite.setTexture(idleTexture);
     }
