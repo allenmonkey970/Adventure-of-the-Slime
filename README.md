@@ -14,7 +14,7 @@ Check out my project version on [GitHub](https://github.com/allenmonkey970/SFML-
 
 1. [Slime Pixel Set by Tienlev](https://tienlev.itch.io/slime-pixel-set)
 2. [Slime by TFWAGames](https://tfwagames.itch.io/slime)
-3. [Cave Tileset by The Pixel Nook](https://the-pixel-nook.itch.io/cave-tileset-free)
+3. [Cave Tileset by Evert](https://opengameart.org/content/top-down-cave-interior)
 4. [Edited Slime Animation Top-Down Pixel Art](https://opengameart.org/content/slime-animationstop-down-pixel-art)
 
 ### Sound Effects
