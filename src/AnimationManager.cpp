@@ -28,7 +28,11 @@ void AnimationManager::update(const std::string &animation, sf::Sprite &sprite) 
             } else if (m_indices[animation].x < m_sheetSizes[animation].x - 1) {
                 m_indices[animation].y = 0;
                 ++m_indices[animation].x;
+            } else {
+                m_indices[animation] = m_startingIndices[animation]; // Reset to starting index for looping animation
             }
+
+            std::cout << "Animation frame updated: " << animation << " to frame (" << m_indices[animation].x << ", " << m_indices[animation].y << ")" << std::endl;
         }
     } else {
         std::cerr << "No animation entry found for \"" << animation << "\"!" << std::endl;
@@ -52,6 +56,7 @@ void AnimationManager::addAnimation(const std::string &animation, const sf::Text
     m_startingIndices[animation] = startingIndex;
     m_endingIndices[animation] = sheetSize;
     m_frequencies[animation] = frequency;
+    m_timesUpdated[animation] = 0; // Initialize the times updated counter
 }
 
 void AnimationManager::deleteAnimation(const std::string &animation) {
