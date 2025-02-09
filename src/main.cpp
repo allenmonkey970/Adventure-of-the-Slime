@@ -12,7 +12,6 @@ int main() {
     window.setVerticalSyncEnabled(true);
 
     std::cout << "Window created successfully.\n";
-    SoundPlayer soundPlayer;
     std::string filename;
     Icon icon;
     icon.draw(window);

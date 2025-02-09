@@ -4,8 +4,8 @@
 #include <SFML/Audio.hpp>
 #include <string>
 #include <iostream>
-
-//soundPlayer.playSound("assets/sound effects/damage.wav");
+// SoundPlayer soundPlayer;
+// soundPlayer.playSound("assets/sound effects/damage.wav");
 
 class SoundPlayer {
 public:
