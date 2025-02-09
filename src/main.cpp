@@ -4,6 +4,7 @@
 #include "slime.h"
 #include "icon.h"
 #include <iostream>
+#include "SoundPlayer.h"
 
 int main() {
     sf::RenderWindow window(sf::VideoMode({1920u, 1080u}), "Adventure of the Slime");
@@ -11,7 +12,8 @@ int main() {
     window.setVerticalSyncEnabled(true);
 
     std::cout << "Window created successfully.\n";
-
+    SoundPlayer soundPlayer;
+    std::string filename;
     Icon icon;
     icon.draw(window);
     std::cout << "Icon drawn successfully.\n";
@@ -113,7 +115,6 @@ int main() {
 
         // Update view position to follow the player
         view.setCenter(mainSlime.getPosition());
-
         window.clear();
         window.setView(view);
         window.draw(map);
