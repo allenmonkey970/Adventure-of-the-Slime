@@ -32,7 +32,6 @@ int main() {
     view.setCenter(mainSlime.getPosition());
 
     view.zoom(0.3f);
-    sf::Clock clock;
     sf::Clock animationClock;
     constexpr float animationUpdateInterval = 0.2f; // Adjust the interval to control animation speed
     std::string currentAnimation = "idle";
@@ -102,8 +101,7 @@ int main() {
             mainSlime.move(movement);
         }
 
-        // Calculate time since last update
-        float deltaTime = clock.restart().asSeconds();
+
         float animationDeltaTime = animationClock.getElapsedTime().asSeconds();
 
         // Update the animation based on the time interval
