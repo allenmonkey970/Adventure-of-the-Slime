@@ -1,7 +1,7 @@
 # Adventure-of-the-Slime
 
 ## Animation
-I updated [Jfeatherstone animation manager](https://github.com/Jfeatherstone/SFMLAnimation?tab=readme-ov-file) to SFML 3.0
+I updated [Jfeatherstone animation manager](https://github.com/Jfeatherstone/SFMLAnimation?tab=readme-ov-file) to SFML 3.0 with some tweaks to the code.
 ## Assets
 
 ### Graphics
