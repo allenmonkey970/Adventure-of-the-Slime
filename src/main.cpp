@@ -27,7 +27,6 @@ int main() {
 
     std::cout << "Tile map loaded successfully.\n";
 
-
     sf::View view(sf::Vector2f(960.f, 540.f), sf::Vector2f(1920.f, 1080.f));
     view.setCenter(mainSlime.getPosition());
 
@@ -38,31 +37,27 @@ int main() {
 
             sf::Vector2f movement(0.f, 0.f);
             // Handle keyboard input for movement
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
                 movement.x -= moveSpeed;
+                mainSlime.setScale("moveLeft", {1.f, 1.f});
             }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
                 movement.x += moveSpeed;
+                mainSlime.setScale("moveRight", {1.f, 1.f});
             }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
                 movement.y -= moveSpeed;
+                mainSlime.setScale("moveUp", {1.f, 1.f});
             }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
                 movement.y += moveSpeed;
+                mainSlime.setScale("moveDown", {1.f, 1.f});
             }
 
             // Check collision
             sf::Vector2f newPos = mainSlime.getPosition() + movement;
             if (!map.isCollision(newPos, {32, 32})) {
                 mainSlime.move(movement);
-            }
-
-            // Handle scale changes
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-                mainSlime.setScale("hit", {3, 3});
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-                mainSlime.setScale("idle", {3, 3});
             }
         }
 

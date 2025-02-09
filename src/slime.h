@@ -3,12 +3,19 @@
 #include "AnimationManager.h"
 #include <iostream>
 
+
 class Slime {
 public:
     Slime() : sprite(idleTexture), currentAnimation("idle") {
-        setupAnimation(hitTexture, "assets/slime/hit/damage.png", "hit", {7, 1}, {40, 32}, {0, 0}, 3);
-        setupAnimation(idleTexture, "assets/slime/Idle/idle.png", "idle", {7, 1}, {30, 27}, {0, 0}, 3);
-        setupAnimation(deathTexture, "assets/slime/Death/death.png", "death", {6, 1}, {55, 45}, {0, 0}, 2);
+        setupAnimation(hitTexture, "hit", "assets/slime/hit/damage.png", {7, 1}, {40, 32}, {0, 0}, 3);
+        setupAnimation(idleTexture, "idle", "assets/slime/Idle/idle.png", {7, 1}, {30, 27}, {0, 0}, 3);
+        setupAnimation(deathTexture, "death", "assets/slime/Death/death.png", {6, 1}, {55, 45}, {0, 0}, 2);
+
+        // Movement animations
+        setupAnimation(moveDownTexture, "moveDown", "assets/slime/walking/down/walkingDown.png", {3, 1}, {42, 42}, {0, 0}, 2);
+        setupAnimation(moveRightTexture, "moveRight", "assets/slime/walking/sideways/WalkingSideways.png", {8, 1}, {30, 28}, {0, 0}, 3);
+        setupAnimation(moveLeftTexture, "moveLeft", "assets/slime/walking/sideways/WalkingSideways.png", {8, 1}, {30, 28}, {0, 0}, 3); // Added moveLeft
+        setupAnimation(moveUpTexture, "moveUp", "assets/slime/walking/up/walkingUpwards.png", {3, 1}, {42, 42}, {0, 0}, 3);
         sprite.setTexture(idleTexture);
     }
 
@@ -19,10 +26,20 @@ public:
             sprite.setTexture(idleTexture);
         } else if (animationName == "death") {
             sprite.setTexture(deathTexture);
+        } else if (animationName == "moveDown") {
+            sprite.setTexture(moveDownTexture);
+        } else if (animationName == "moveRight") {
+            sprite.setTexture(moveRightTexture);
+            sprite.setScale(scale);
+        } else if (animationName == "moveLeft") {
+            sprite.setTexture(moveLeftTexture); // Use the same texture as moveRight
+            sf::Vector2f flippedScale(-scale.x, scale.y); // Create a flipped scale vector
+            sprite.setScale(flippedScale); // Flip horizontally for left movement
+        } else if (animationName == "moveUp") {
+            sprite.setTexture(moveUpTexture);
         }
         currentAnimation = animationName;
         AnimationManager::resetAnimationIndex(currentAnimation);
-        sprite.setScale(scale);
     }
 
     void draw(sf::RenderWindow& window) {
@@ -43,9 +60,13 @@ private:
     sf::Texture hitTexture;
     sf::Texture idleTexture;
     sf::Texture deathTexture;
+    sf::Texture moveDownTexture;
+    sf::Texture moveRightTexture;
+    sf::Texture moveLeftTexture;
+    sf::Texture moveUpTexture;
     std::string currentAnimation;
 
-    static void setupAnimation(sf::Texture& texture, const std::string& filePath, const std::string& animationName, sf::Vector2i frameCount, sf::Vector2i frameSize, sf::Vector2i startPosition, int speed) {
+    static void setupAnimation(sf::Texture& texture, const std::string& animationName, const std::string& filePath, sf::Vector2i frameCount, sf::Vector2i frameSize, sf::Vector2i startPosition, int speed) {
         if (!texture.loadFromFile(filePath)) {
             std::cerr << "Failed to load texture: " << filePath << "\n";
         } else {
