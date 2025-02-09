@@ -7,14 +7,14 @@ class Slime {
 public:
     Slime() : sprite(idleTexture), currentAnimation("idle") {
         setupAnimation(hitTexture, "hit", "assets/slime/hit/damage.png", {7, 1}, {40, 32}, {0, 0}, 6);
-        setupAnimation(idleTexture, "idle", "assets/slime/Idle/idle.png", {7, 1}, {30, 27}, {0, 0}, 9);
+        setupAnimation(idleTexture, "idle", "assets/slime/Idle/idle.png", {7, 1}, {30, 27}, {0, 0}, 10);
         setupAnimation(deathTexture, "death", "assets/slime/Death/death.png", {6, 1}, {55, 45}, {0, 0}, 4);
 
         // Movement animations
-        setupAnimation(moveDownTexture, "moveDown", "assets/slime/walking/down/walkingDown.png", {3, 1}, {42, 42}, {0, 0}, 5);
+        setupAnimation(moveDownTexture, "moveDown", "assets/slime/walking/down/walkingDown.png", {3, 1}, {42, 42}, {0, 0}, 7);
         setupAnimation(moveRightTexture, "moveRight", "assets/slime/walking/sideways/WalkingSideways.png", {7, 1}, {30, 28}, {0, 0}, 6);
         setupAnimation(moveLeftTexture, "moveLeft", "assets/slime/walking/sideways/WalkingSideways.png", {7, 1}, {30, 28}, {0, 0}, 6);
-        setupAnimation(moveUpTexture, "moveUp", "assets/slime/walking/up/walkingUpwards.png", {3, 1}, {42, 42}, {0, 0}, 6);
+        setupAnimation(moveUpTexture, "moveUp", "assets/slime/walking/up/walkingUpwards.png", {3, 1}, {43, 42}, {0, 0}, 9);
         sprite.setTexture(idleTexture);
     }
 
