@@ -9,7 +9,7 @@
 #include <iostream>
 #include <set>
 
-const std::set<int> collidableTiles = {2, 3}; // Add any tile numbers that should be collidable
+const std::set<int> collidableTiles = {}; // Add any tile numbers that should be collidable
 
 class TileMap : public sf::Drawable, public sf::Transformable
 {
