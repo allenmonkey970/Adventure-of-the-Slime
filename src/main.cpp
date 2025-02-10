@@ -130,7 +130,7 @@ int main() {
     while (window.isOpen()) {
         handleEvents(window, view);
 
-        sf::Vector2f movement = handleMovement(mainSlime, map, currentAnimation);
+        sf::Vector2f movement = handleMovement(mainSlime, map, currentAnimation); // This is the movement function do not remove
 
         float animationDeltaTime = animationClock.getElapsedTime().asSeconds();
         if (animationDeltaTime >= animationUpdateInterval) {

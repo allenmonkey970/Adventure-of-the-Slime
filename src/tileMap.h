@@ -28,12 +28,12 @@ public:
         m_vertices.resize(static_cast<std::size_t>(width) * static_cast<std::size_t>(height) * 6);
 
         // Resize the collision array to fit the level size
-        m_collision.resize(width * height, false);
+        m_collision.resize(static_cast<std::vector<bool>::size_type>(width) * static_cast<std::vector<bool>::size_type>(height), false);
 
         // Populate the vertex array, with two triangles per tile
-        for (std::size_t i = 0; i < width; ++i)
+        for (unsigned int i = 0; i < width; ++i)
         {
-            for (std::size_t j = 0; j < height; ++j)
+            for (unsigned int j = 0; j < height; ++j)
             {
                 // Get the current tile number
                 const int tileNumber = tiles[static_cast<std::vector<int>::size_type>(i + j * static_cast<std::size_t>(width))];
@@ -63,7 +63,7 @@ public:
 
                 // Set collision for specific tile numbers
                 if (collidableTiles.count(tileNumber) > 0) {
-                    m_collision[static_cast<std::vector<bool>::size_type>(i + j * width)] = true;
+                    m_collision[static_cast<std::vector<bool>::size_type>(i + j * static_cast<std::size_t>(width))] = true;
                 }
             }
         }
@@ -72,12 +72,12 @@ public:
     }
 
     bool isCollision(const sf::Vector2f& position, sf::Vector2u tileSize) const {
-        sf::FloatRect playerBounds(position, sf::Vector2f(tileSize));
-        for (int y = static_cast<int>(position.y) / tileSize.y; y < (position.y + tileSize.y) / tileSize.y; ++y) {
-            for (int x = static_cast<int>(position.x) / tileSize.x; x < (position.x + tileSize.x) / tileSize.x; ++x) {
-                if (x >= 0 && x < static_cast<int>(m_width) && y >= 0 && y < static_cast<int>(m_height)) {
+        sf::FloatRect playerBounds(position, sf::Vector2f(static_cast<float>(tileSize.x), static_cast<float>(tileSize.y)));
+        for (unsigned int y = static_cast<unsigned int>(position.y) / tileSize.y; y < (position.y + tileSize.y) / tileSize.y; ++y) {
+            for (unsigned int x = static_cast<unsigned int>(position.x) / tileSize.x; x < (position.x + tileSize.x) / tileSize.x; ++x) {
+                if (x < m_width && y < m_height) {
                     if (m_collision[static_cast<std::vector<bool>::size_type>(x + y * m_width)]) {
-                        sf::FloatRect tileBounds(sf::Vector2f(static_cast<float>(x * tileSize.x), static_cast<float>(y * tileSize.y)), sf::Vector2f(tileSize));
+                        sf::FloatRect tileBounds(sf::Vector2f(static_cast<float>(x * tileSize.x), static_cast<float>(y * tileSize.y)), sf::Vector2f(static_cast<float>(tileSize.x), static_cast<float>(tileSize.y)));
                         if (playerBounds.findIntersection(tileBounds)) {
                             return true;
                         }
@@ -106,12 +106,14 @@ public:
         {
             std::istringstream stream(line);
             int tile;
+            std::vector<int> row;
             while (stream >> tile)
             {
-                tiles.push_back(tile);
+                row.push_back(tile);
             }
             if (width == 0)
-                width = static_cast<unsigned int>(tiles.size());
+                width = static_cast<unsigned int>(row.size());
+            tiles.insert(tiles.end(), row.begin(), row.end());
             ++height;
         }
 
@@ -123,8 +125,8 @@ public:
         return load(tileset, tileSize, tiles, width, height, collidableTiles);
     }
 
-    sf::Vector2f getTilePosition(unsigned int row, unsigned int col, sf::Vector2u tileSize) const {
-        return sf::Vector2f(col * tileSize.x, row * tileSize.y);
+    static sf::Vector2f getTilePosition(unsigned int row, unsigned int col, sf::Vector2u tileSize) {
+        return {static_cast<float>(col * tileSize.x), static_cast<float>(row * tileSize.y)};
     }
 
 private:
@@ -143,8 +145,8 @@ private:
     sf::VertexArray m_vertices;
     sf::Texture m_tileset;
     std::vector<bool> m_collision;
-    unsigned int m_width;
-    unsigned int m_height;
+    std::vector<bool>::size_type m_width;
+    std::vector<bool>::size_type m_height;
 };
 
 #endif // TILEMAP_H
