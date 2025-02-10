@@ -9,14 +9,12 @@
 #include <iostream>
 #include <set>
 
-const std::set<int> collidableTiles = {}; // Add any tile numbers that should be collidable
-
 class TileMap : public sf::Drawable, public sf::Transformable
 {
 public:
     TileMap() : m_width(0), m_height(0) {}
 
-    bool load(const std::filesystem::path& tileset, sf::Vector2u tileSize, const std::vector<int>& tiles, unsigned int width, unsigned int height)
+    bool load(const std::filesystem::path& tileset, sf::Vector2u tileSize, const std::vector<int>& tiles, unsigned int width, unsigned int height, const std::set<int>& collidableTiles)
     {
         // Load the tileset texture
         if (!m_tileset.loadFromFile(tileset))
@@ -91,7 +89,7 @@ public:
         return false;
     }
 
-    bool loadFromFile(const std::filesystem::path& mapFile, const std::filesystem::path& tileset, sf::Vector2u tileSize)
+    bool loadFromFile(const std::filesystem::path& mapFile, const std::filesystem::path& tileset, sf::Vector2u tileSize, const std::set<int>& collidableTiles)
     {
         std::ifstream file(mapFile);
         if (!file.is_open())
@@ -122,7 +120,11 @@ public:
         m_width = width;
         m_height = height;
 
-        return load(tileset, tileSize, tiles, width, height);
+        return load(tileset, tileSize, tiles, width, height, collidableTiles);
+    }
+
+    sf::Vector2f getTilePosition(unsigned int row, unsigned int col, sf::Vector2u tileSize) const {
+        return sf::Vector2f(col * tileSize.x, row * tileSize.y);
     }
 
 private:

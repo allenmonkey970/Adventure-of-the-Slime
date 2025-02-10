@@ -32,7 +32,9 @@ public:
     void move(const sf::Vector2f& offset) {
         sprite.move(offset);
     }
-
+    void setPosition(const sf::Vector2f& position) {
+        sprite.setPosition(position);
+    }
     sf::Vector2f getPosition() const {
         return sprite.getPosition();
     }

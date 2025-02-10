@@ -6,109 +6,125 @@
 #include <iostream>
 #include "SoundPlayer.h"
 
+void switchMap(TileMap& currentMap, const std::filesystem::path& mapFile, const std::filesystem::path& tilesetFile, const std::set<int>& collidableTiles) {
+    if (!currentMap.loadFromFile(mapFile, tilesetFile, {32, 32}, collidableTiles)) {
+        std::cerr << "Failed to load tile map from file.\n";
+    }
+}
+
+void handleEvents(sf::RenderWindow& window, sf::View& view) {
+    while (const std::optional<sf::Event> event = window.pollEvent()) {
+        if (event && event->is<sf::Event::Closed>()) {
+            window.close();
+        }
+
+        if (event && event->is<sf::Event::Resized>()) {
+            const auto* resized = event->getIf<sf::Event::Resized>();
+            sf::Vector2f newSize(static_cast<float>(resized->size.x), static_cast<float>(resized->size.y));
+            view.setSize(newSize);
+            view.zoom(0.3f);
+            window.setView(view);
+        }
+    }
+}
+
+sf::Vector2f handleMovement(Slime& mainSlime, const TileMap& map, std::string& currentAnimation) {
+    sf::Vector2f movement(0.f, 0.f);
+    constexpr float horizontalMoveSpeed = 3.f;
+    constexpr float verticalMoveSpeed = 5.f;
+    bool isMoving = false;
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
+        movement.x -= horizontalMoveSpeed;
+        if (currentAnimation != "moveLeft") {
+            mainSlime.setScale("moveLeft", {1.f, 1.f});
+            currentAnimation = "moveLeft";
+        }
+        isMoving = true;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+        movement.x += horizontalMoveSpeed;
+        if (currentAnimation != "moveRight") {
+            mainSlime.setScale("moveRight", {1.f, 1.f});
+            currentAnimation = "moveRight";
+        }
+        isMoving = true;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
+        movement.y -= verticalMoveSpeed;
+        if (currentAnimation != "moveUp") {
+            mainSlime.setScale("moveUp", {1.f, 1.f});
+            currentAnimation = "moveUp";
+        }
+        isMoving = true;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
+        movement.y += verticalMoveSpeed;
+        if (currentAnimation != "moveDown") {
+            mainSlime.setScale("moveDown", {1.f, 1.f});
+            currentAnimation = "moveDown";
+        }
+        isMoving = true;
+    }
+
+    if (!isMoving && currentAnimation != "idle") {
+        mainSlime.setScale("idle", {1.f, 1.f});
+        currentAnimation = "idle";
+    }
+
+    sf::Vector2f newPos = mainSlime.getPosition() + movement;
+    if (!map.isCollision(newPos, {32, 32})) {
+        mainSlime.move(movement);
+    }
+
+    return movement;
+}
+
 int main() {
     sf::RenderWindow window(sf::VideoMode({1920u, 1080u}), "Adventure of the Slime");
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 
-    std::string filename;
     Icon icon;
     icon.draw(window);
 
-    Slime mainSlime;
-
-    // Create the tilemap from the level definition
     TileMap map;
-    if (!map.loadFromFile("assets/maps/map.txt", "assets/cave/tileSet.png", {32, 32})) {
-        std::cerr << "Failed to load tile map from file.\n";
-        return -1;
-    }
+    std::set<int> collidableTiles = {1};
 
-    std::cout << "Tile map loaded successfully.\n";
+    const std::filesystem::path caveMapFile = "assets/maps/cave_map.txt";
+    const std::filesystem::path caveTilesetFile = "assets/cave/tileSet.png";
+    switchMap(map, caveMapFile, caveTilesetFile, collidableTiles);
+
+    unsigned int spawnRow = 5;
+    unsigned int spawnCol = 7;
+    sf::Vector2u tileSize(32, 32);
+    sf::Vector2f spawnPosition = map.getTilePosition(spawnRow, spawnCol, tileSize);
+
+    Slime mainSlime;
+    mainSlime.setPosition(spawnPosition);
+    std::cout << "Initial tile map loaded successfully.\n";
 
     sf::View view(sf::FloatRect({0.f, 0.f}, {1920.f, 1080.f}));
     view.setCenter(mainSlime.getPosition());
-
     view.zoom(0.3f);
+
     sf::Clock animationClock;
-    constexpr float animationUpdateInterval = 0.2f; // Adjust the interval to control animation speed
+    constexpr float animationUpdateInterval = 0.2f;
     std::string currentAnimation = "idle";
 
+    bool mapSwitched = false;
+
     while (window.isOpen()) {
-        while (const std::optional<sf::Event> event = window.pollEvent()) {
-            if (event && event->is<sf::Event::Closed>()) {
-                window.close();
-            }
+        handleEvents(window, view);
 
-            // Catch the resize events
-            if (event && event->is<sf::Event::Resized>()) {
-                const auto* resized = event->getIf<sf::Event::Resized>();
-                sf::Vector2f newSize(static_cast<float>(resized->size.x), static_cast<float>(resized->size.y));
-                view.setSize(newSize); // Update the view size
-                view.zoom(0.3f); // Maintain zoom factor
-                window.setView(view);
-            }
-        }
-
-        sf::Vector2f movement(0.f, 0.f);
-        constexpr float horizontalMoveSpeed = 3.f; // Reduced speed for left/right movement
-        constexpr float verticalMoveSpeed = 5.f; // Original speed for up/down movement
-        bool isMoving = false;
-
-        // Handle continuous keyboard input for movement
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-            movement.x -= horizontalMoveSpeed;
-            if (currentAnimation != "moveLeft") {
-                mainSlime.setScale("moveLeft", {1.f, 1.f});
-                currentAnimation = "moveLeft";
-            }
-            isMoving = true;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-            movement.x += horizontalMoveSpeed;
-            if (currentAnimation != "moveRight") {
-                mainSlime.setScale("moveRight", {1.f, 1.f});
-                currentAnimation = "moveRight";
-            }
-            isMoving = true;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-            movement.y -= verticalMoveSpeed;
-            if (currentAnimation != "moveUp") {
-                mainSlime.setScale("moveUp", {1.f, 1.f});
-                currentAnimation = "moveUp";
-            }
-            isMoving = true;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-            movement.y += verticalMoveSpeed;
-            if (currentAnimation != "moveDown") {
-                mainSlime.setScale("moveDown", {1.f, 1.f});
-                currentAnimation = "moveDown";
-            }
-            isMoving = true;
-        }
-
-        if (!isMoving && currentAnimation != "idle") {
-            mainSlime.setScale("idle", {1.f, 1.f});
-            currentAnimation = "idle";
-        }
-
-        // Check collision
-        sf::Vector2f newPos = mainSlime.getPosition() + movement;
-        if (!map.isCollision(newPos, {32, 32})) {
-            mainSlime.move(movement);
-        }
+        sf::Vector2f movement = handleMovement(mainSlime, map, currentAnimation);
 
         float animationDeltaTime = animationClock.getElapsedTime().asSeconds();
-
-        // Update the animation based on the time interval
         if (animationDeltaTime >= animationUpdateInterval) {
             animationClock.restart();
             mainSlime.updateAnimation();
         }
 
-        // Update view position to follow the player
         view.setCenter(mainSlime.getPosition());
         window.clear();
         window.setView(view);
