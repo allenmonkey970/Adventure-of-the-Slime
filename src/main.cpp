@@ -1,14 +1,26 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include <SFML/Audio.hpp>
 #include "tileMap.h"
 #include "slime.h"
 #include "icon.h"
-#include <iostream>
 #include "SoundPlayer.h"
+#include <iostream>
 
-void switchMap(TileMap& currentMap, const std::filesystem::path& mapFile, const std::filesystem::path& tilesetFile, const std::set<int>& collidableTiles) {
+sf::Music backgroundMusic;
+
+void switchMap(TileMap& currentMap, const std::filesystem::path& mapFile, const std::filesystem::path& tilesetFile, const std::set<int>& collidableTiles, const std::string& musicFile) {
     if (!currentMap.loadFromFile(mapFile, tilesetFile, {32, 32}, collidableTiles)) {
         std::cerr << "Failed to load tile map from file.\n";
+    }
+    // Stop any currently playing music
+    backgroundMusic.stop();
+    // Load and play the new music file
+    if (!backgroundMusic.openFromFile(musicFile)) {
+        std::cerr << "Failed to load music from file: " << musicFile << std::endl;
+    } else {
+        backgroundMusic.setLoopPoints({sf::milliseconds(500), sf::seconds(4)});
+        backgroundMusic.play();
     }
 }
 
@@ -93,7 +105,8 @@ int main() {
 
     const std::filesystem::path caveMapFile = "assets/maps/cave_map.txt";
     const std::filesystem::path caveTilesetFile = "assets/cave/tileSet.png";
-    switchMap(map, caveMapFile, caveTilesetFile, collidableTiles);
+    const std::string caveMusicFile = "assets/sound effects/caveMusic.mp3";
+    switchMap(map, caveMapFile, caveTilesetFile, collidableTiles, caveMusicFile);
 
     unsigned int spawnRow = 5;
     unsigned int spawnCol = 7;
