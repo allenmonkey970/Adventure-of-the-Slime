@@ -11,11 +11,9 @@ int main() {
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 
-    std::cout << "Window created successfully.\n";
     std::string filename;
     Icon icon;
     icon.draw(window);
-    std::cout << "Icon drawn successfully.\n";
 
     Slime mainSlime;
 
