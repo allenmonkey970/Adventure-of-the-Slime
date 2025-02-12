@@ -25,10 +25,10 @@ public:
 
         // Resize the vertex array to fit the level size
         m_vertices.setPrimitiveType(sf::PrimitiveType::Triangles);
-        m_vertices.resize(static_cast<std::size_t>(width) * static_cast<std::size_t>(height) * 6);
+        m_vertices.resize(static_cast<std::vector<sf::Vertex>::size_type>(width) * height * 6);
 
         // Resize the collision array to fit the level size
-        m_collision.resize(static_cast<std::vector<bool>::size_type>(width) * static_cast<std::vector<bool>::size_type>(height), false);
+        m_collision.resize(static_cast<std::vector<bool>::size_type>(width) * height, false);
 
         // Populate the vertex array, with two triangles per tile
         for (unsigned int i = 0; i < width; ++i)
@@ -39,27 +39,27 @@ public:
                 const int tileNumber = tiles[static_cast<std::vector<int>::size_type>(i + j * static_cast<std::size_t>(width))];
 
                 // Find its position in the tileset texture
-                const int tu = tileNumber % static_cast<int>(m_tileset.getSize().x / tileSize.x);
-                const int tv = tileNumber / static_cast<int>(m_tileset.getSize().x / tileSize.x);
+                const int tu = tileNumber % (m_tileset.getSize().x / tileSize.x);
+                const int tv = tileNumber / (m_tileset.getSize().x / tileSize.x);
 
                 // Get a pointer to the triangles' vertices of the current tile
-                sf::Vertex* triangles = &m_vertices[(i + j * width) * 6];
+                sf::Vertex* triangles = &m_vertices[static_cast<std::vector<sf::Vertex>::size_type>(i + j * static_cast<std::size_t>(width)) * 6];
 
                 // Define the 6 corners of the two triangles
-                triangles[0].position = sf::Vector2f(static_cast<float>(i * tileSize.x), static_cast<float>(j * tileSize.y));
-                triangles[1].position = sf::Vector2f(static_cast<float>((i + 1) * tileSize.x), static_cast<float>(j * tileSize.y));
-                triangles[2].position = sf::Vector2f(static_cast<float>(i * tileSize.x), static_cast<float>((j + 1) * tileSize.y));
-                triangles[3].position = sf::Vector2f(static_cast<float>(i * tileSize.x), static_cast<float>((j + 1) * tileSize.y));
-                triangles[4].position = sf::Vector2f(static_cast<float>((i + 1) * tileSize.x), static_cast<float>(j * tileSize.y));
-                triangles[5].position = sf::Vector2f(static_cast<float>((i + 1) * tileSize.x), static_cast<float>((j + 1) * tileSize.y));
+                triangles[0].position = sf::Vector2f(i * tileSize.x, j * tileSize.y);
+                triangles[1].position = sf::Vector2f((i + 1) * tileSize.x, j * tileSize.y);
+                triangles[2].position = sf::Vector2f(i * tileSize.x, (j + 1) * tileSize.y);
+                triangles[3].position = sf::Vector2f(i * tileSize.x, (j + 1) * tileSize.y);
+                triangles[4].position = sf::Vector2f((i + 1) * tileSize.x, j * tileSize.y);
+                triangles[5].position = sf::Vector2f((i + 1) * tileSize.x, (j + 1) * tileSize.y);
 
                 // Define the 6 matching texture coordinates
-                triangles[0].texCoords = sf::Vector2f(static_cast<float>(tu * tileSize.x), static_cast<float>(tv * tileSize.y));
-                triangles[1].texCoords = sf::Vector2f(static_cast<float>((tu + 1) * tileSize.x), static_cast<float>(tv * tileSize.y));
-                triangles[2].texCoords = sf::Vector2f(static_cast<float>(tu * tileSize.x), static_cast<float>((tv + 1) * tileSize.y));
-                triangles[3].texCoords = sf::Vector2f(static_cast<float>(tu * tileSize.x), static_cast<float>((tv + 1) * tileSize.y));
-                triangles[4].texCoords = sf::Vector2f(static_cast<float>((tu + 1) * tileSize.x), static_cast<float>(tv * tileSize.y));
-                triangles[5].texCoords = sf::Vector2f(static_cast<float>((tu + 1) * tileSize.x), static_cast<float>((tv + 1) * tileSize.y));
+                triangles[0].texCoords = sf::Vector2f(tu * tileSize.x, tv * tileSize.y);
+                triangles[1].texCoords = sf::Vector2f((tu + 1) * tileSize.x, tv * tileSize.y);
+                triangles[2].texCoords = sf::Vector2f(tu * tileSize.x, (tv + 1) * tileSize.y);
+                triangles[3].texCoords = sf::Vector2f(tu * tileSize.x, (tv + 1) * tileSize.y);
+                triangles[4].texCoords = sf::Vector2f((tu + 1) * tileSize.x, tv * tileSize.y);
+                triangles[5].texCoords = sf::Vector2f((tu + 1) * tileSize.x, (tv + 1) * tileSize.y);
 
                 // Set collision for specific tile numbers
                 if (collidableTiles.count(tileNumber) > 0) {
@@ -72,12 +72,12 @@ public:
     }
 
     bool isCollision(const sf::Vector2f& position, sf::Vector2u tileSize) const {
-        sf::FloatRect playerBounds(position, sf::Vector2f(static_cast<float>(tileSize.x), static_cast<float>(tileSize.y)));
-        for (unsigned int y = static_cast<unsigned int>(position.y) / tileSize.y; y < (position.y + tileSize.y) / tileSize.y; ++y) {
-            for (unsigned int x = static_cast<unsigned int>(position.x) / tileSize.x; x < (position.x + tileSize.x) / tileSize.x; ++x) {
+        sf::FloatRect playerBounds(position, sf::Vector2f(tileSize.x, tileSize.y));
+        for (unsigned int y = position.y / tileSize.y; y < (position.y + tileSize.y) / tileSize.y; ++y) {
+            for (unsigned int x = position.x / tileSize.x; x < (position.x + tileSize.x) / tileSize.x; ++x) {
                 if (x < m_width && y < m_height) {
-                    if (m_collision[static_cast<std::vector<bool>::size_type>(x + y * m_width)]) {
-                        sf::FloatRect tileBounds(sf::Vector2f(static_cast<float>(x * tileSize.x), static_cast<float>(y * tileSize.y)), sf::Vector2f(static_cast<float>(tileSize.x), static_cast<float>(tileSize.y)));
+                    if (m_collision[static_cast<std::vector<bool>::size_type>(x + y * static_cast<std::size_t>(m_width))]) {
+                        sf::FloatRect tileBounds(sf::Vector2f(x * tileSize.x, y * tileSize.y), sf::Vector2f(tileSize.x, tileSize.y));
                         if (playerBounds.findIntersection(tileBounds)) {
                             return true;
                         }
@@ -112,7 +112,7 @@ public:
                 row.push_back(tile);
             }
             if (width == 0)
-                width = static_cast<unsigned int>(row.size());
+                width = row.size();
             tiles.insert(tiles.end(), row.begin(), row.end());
             ++height;
         }
@@ -145,8 +145,8 @@ private:
     sf::VertexArray m_vertices;
     sf::Texture m_tileset;
     std::vector<bool> m_collision;
-    std::vector<bool>::size_type m_width;
-    std::vector<bool>::size_type m_height;
+    unsigned int m_width;
+    unsigned int m_height;
 };
 
 #endif // TILEMAP_H
