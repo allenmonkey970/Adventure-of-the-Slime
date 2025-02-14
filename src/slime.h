@@ -12,8 +12,8 @@ public:
 
         // Movement animations
         setupAnimation(moveDownTexture, "moveDown", "assets/slime/walking/down/walkingDown.png", {3, 1}, {42, 42}, {0, 0}, 7);
-        setupAnimation(moveRightTexture, "moveRight", "assets/slime/walking/sideways/WalkingSideways.png", {7, 1}, {30, 28}, {0, 0}, 6);
-        setupAnimation(moveLeftTexture, "moveLeft", "assets/slime/walking/sideways/WalkingSideways.png", {7, 1}, {30, 28}, {0, 0}, 6);
+        setupAnimation(moveRightTexture, "moveRight", "assets/slime/walking/sideways/walkingRight.png", {7, 1}, {30, 28}, {0, 0}, 6);
+        setupAnimation(moveLeftTexture, "moveLeft", "assets/slime/walking/sideways/walkingLeft.png", {7, 1}, {30, 28}, {0, 0}, 6);
         setupAnimation(moveUpTexture, "moveUp", "assets/slime/walking/up/walkingUpwards.png", {3, 1}, {43, 42}, {0, 0}, 9);
         sprite.setTexture(idleTexture);
     }
@@ -68,7 +68,6 @@ private:
             sprite.setScale(scale);
         } else if (animationName == "moveLeft") {
             sprite.setTexture(moveLeftTexture);
-            sprite.setScale({-scale.x, scale.y}); // Flip horizontally for left movement
         } else if (animationName == "moveUp") {
             sprite.setTexture(moveUpTexture);
         }
