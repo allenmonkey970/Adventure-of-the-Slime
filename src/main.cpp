@@ -24,15 +24,15 @@ int main() {
         icon.draw(window);
 
         TileMap map;
-        std::set<int> collidableTiles = {1};
+        std::set<int> collidableTiles = {0};
 
         const std::filesystem::path caveMapFile = "assets/maps/cave_map.txt";
         const std::filesystem::path caveTilesetFile = "assets/cave/tileSet.png";
         const std::string caveMusicFile = "assets/sound effects/caveMusic.mp3";
         switchMap(map, caveMapFile, caveTilesetFile, collidableTiles, caveMusicFile);
 
-        unsigned int spawnRow = 5;
-        unsigned int spawnCol = 7;
+        unsigned int spawnRow = 10;
+        unsigned int spawnCol = 14;
         sf::Vector2u tileSize(32, 32);
         sf::Vector2f spawnPosition = TileMap::getTilePosition(spawnRow, spawnCol, tileSize);
 
@@ -41,7 +41,7 @@ int main() {
 
         sf::View view(sf::FloatRect({0.f, 0.f}, {1920.f, 1080.f}));
         view.setCenter(mainSlime.getPosition());
-        view.zoom(0.3f);
+        view.zoom(0.25f);
 
         sf::Clock animationClock;
         constexpr float animationUpdateInterval = 0.2f;
