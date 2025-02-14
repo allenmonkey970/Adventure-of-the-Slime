@@ -8,6 +8,7 @@
 #include <sstream>
 #include <iostream>
 #include <set>
+#include <stdexcept>
 
 class TileMap : public sf::Drawable, public sf::Transformable
 {
@@ -16,6 +17,18 @@ public:
 
     bool load(const std::filesystem::path& tileset, sf::Vector2u tileSize, const std::vector<int>& tiles, unsigned int width, unsigned int height, const std::set<int>& collidableTiles)
     {
+        if (width == 0 || height == 0)
+        {
+            std::cerr << "Invalid map dimensions: width and height must be greater than zero.\n";
+            return false;
+        }
+
+        if (tiles.empty())
+        {
+            std::cerr << "Empty tiles vector provided.\n";
+            return false;
+        }
+
         // Load the tileset texture
         if (!m_tileset.loadFromFile(tileset))
         {
@@ -37,6 +50,12 @@ public:
             {
                 // Get the current tile number
                 const int tileNumber = tiles[static_cast<std::vector<int>::size_type>(i + j * static_cast<std::size_t>(width))];
+
+                if (tileNumber < 0)
+                {
+                    std::cerr << "Invalid tile number at position (" << i << ", " << j << "): " << tileNumber << "\n";
+                    return false;
+                }
 
                 // Find its position in the tileset texture
                 const int tu = tileNumber % (m_tileset.getSize().x / tileSize.x);
@@ -72,6 +91,11 @@ public:
     }
 
     bool isCollision(const sf::Vector2f& position, sf::Vector2u tileSize) const {
+        if (tileSize.x == 0 || tileSize.y == 0)
+        {
+            throw std::invalid_argument("Tile size cannot be zero.");
+        }
+
         sf::FloatRect playerBounds(position, sf::Vector2f(tileSize.x, tileSize.y));
         for (unsigned int y = position.y / tileSize.y; y < (position.y + tileSize.y) / tileSize.y; ++y) {
             for (unsigned int x = position.x / tileSize.x; x < (position.x + tileSize.x) / tileSize.x; ++x) {
@@ -109,15 +133,31 @@ public:
             std::vector<int> row;
             while (stream >> tile)
             {
+                if (tile < 0)
+                {
+                    std::cerr << "Invalid tile value: " << tile << "\n";
+                    return false;
+                }
                 row.push_back(tile);
             }
             if (width == 0)
                 width = row.size();
+            else if (row.size() != width)
+            {
+                std::cerr << "Inconsistent row length in map file.\n";
+                return false;
+            }
             tiles.insert(tiles.end(), row.begin(), row.end());
             ++height;
         }
 
         file.close();
+
+        if (width == 0 || height == 0)
+        {
+            std::cerr << "Invalid map dimensions in file: width and height must be greater than zero.\n";
+            return false;
+        }
 
         m_width = width;
         m_height = height;
