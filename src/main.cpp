@@ -5,6 +5,7 @@
 #include "slime.h"
 #include "icon.h"
 #include "SoundPlayer.h"
+#include "enemy.h"
 #include <iostream>
 #include <stdexcept>
 
@@ -38,7 +39,8 @@ int main() {
 
         Slime mainSlime;
         mainSlime.setPosition(spawnPosition);
-
+        enemy enemy;
+        enemy.setPosition(spawnPosition + sf::Vector2f(100.f, 0.f));
         sf::View view(sf::FloatRect({0.f, 0.f}, {1920.f, 1080.f}));
         view.setCenter(mainSlime.getPosition());
         view.zoom(0.25f);
