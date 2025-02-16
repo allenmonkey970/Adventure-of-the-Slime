@@ -54,7 +54,7 @@ int main() {
         while (window.isOpen()) {
             handleEvents(window, view);
 
-            sf::Vector2f movement = handleMovement(mainSlime, map, currentAnimation); // This is the movement function do not remove
+            sf::Vector2f movement = mainSlime.handleMovement(map); // This is the movement function do not remove
 
             float animationDeltaTime = animationClock.getElapsedTime().asSeconds();
             if (animationDeltaTime >= animationUpdateInterval) {
@@ -114,62 +114,5 @@ void handleEvents(sf::RenderWindow& window, sf::View& view) {
         }
     } catch (const std::exception& e) {
         std::cerr << "An error occurred while handling events: " << e.what() << "\n";
-    }
-}
-
-sf::Vector2f handleMovement(Slime& mainSlime, const TileMap& map, std::string& currentAnimation) {
-    try {
-        sf::Vector2f movement(0.f, 0.f);
-        constexpr float horizontalMoveSpeed = 3.f;
-        constexpr float verticalMoveSpeed = 5.f;
-        bool isMoving = false;
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-            movement.x -= horizontalMoveSpeed;
-            if (currentAnimation != "moveLeft") {
-                mainSlime.setScale("moveLeft", {1.f, 1.f});
-                currentAnimation = "moveLeft";
-            }
-            isMoving = true;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-            movement.x += horizontalMoveSpeed;
-            if (currentAnimation != "moveRight") {
-                mainSlime.setScale("moveRight", {1.f, 1.f});
-                currentAnimation = "moveRight";
-            }
-            isMoving = true;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-            movement.y -= verticalMoveSpeed;
-            if (currentAnimation != "moveUp") {
-                mainSlime.setScale("moveUp", {1.f, 1.f});
-                currentAnimation = "moveUp";
-            }
-            isMoving = true;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-            movement.y += verticalMoveSpeed;
-            if (currentAnimation != "moveDown") {
-                mainSlime.setScale("moveDown", {.6f, .6f});
-                currentAnimation = "moveDown";
-            }
-            isMoving = true;
-        }
-
-        if (!isMoving && currentAnimation != "idle") {
-            mainSlime.setScale("idle", {1.f, 1.f});
-            currentAnimation = "idle";
-        }
-
-        sf::Vector2f newPos = mainSlime.getPosition() + movement;
-        if (!map.isCollision(newPos, {32, 32})) {
-            mainSlime.move(movement);
-        }
-
-        return movement;
-    } catch (const std::exception& e) {
-        std::cerr << "An error occurred while handling movement: " << e.what() << "\n";
-        return {0.f, 0.f};
     }
 }

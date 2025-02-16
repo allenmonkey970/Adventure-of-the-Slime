@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "AnimationManager.h"
+#include "tileMap.h"
 #include <iostream>
 
 class Slime {
@@ -42,6 +43,8 @@ public:
     void updateAnimation() {
         AnimationManager::update(currentAnimation, sprite);
     }
+
+    sf::Vector2f handleMovement(const TileMap& map);
 
 private:
     sf::Sprite sprite;
