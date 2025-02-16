@@ -15,16 +15,16 @@
 
 class enemy {
 public:
-    enemy() : sprite(idleTexture), currentAnimation("batIdle") {
+    enemy() : sprite(idleTexture), currentAnimation("batIdle"), speed(.06f){
         setupAnimation(hitTexture, "batHit", "assets/enemy/bat/BatAttack.png", {4, 4}, {32, 32}, {0, 0}, 6);
         setupAnimation(idleTexture, "batIdle", "assets/enemy/bat/BatFlyIdle.png", {4, 1}, {32, 32}, {0, 0}, 10);
         setupAnimation(deathTexture, "batDeath", "assets/enemy/bat/BatDie.png", {9, 1}, {32, 32}, {0, 0}, 4);
 
         // Movement animations
-        setupAnimation(moveDownTexture, "batMoveDown", "assets/enemy/bat/BatFlyIdle.png", {4, 1}, {32, 32}, {0, 0}, 7);
-        setupAnimation(moveRightTexture, "batMoveRight", "assets/enemy/bat/BatFlyIdle.png", {4, 1}, {32, 32}, {0, 0}, 6);
-        setupAnimation(moveLeftTexture, "batMoveLeft", "assets/enemy/bat/BatFlyIdle.png", {4, 1}, {32, 32}, {0, 0}, 6);
-        setupAnimation(moveUpTexture, "batMoveUp", "assets/enemy/bat/BatFlyIdle.png", {4, 1}, {32, 32}, {0, 0}, 9);
+        setupAnimation(moveDownTexture, "batMoveDown", "assets/enemy/bat/BatFlyIdle.png", {4, 1}, {32, 32}, {0, 0}, 12);
+        setupAnimation(moveRightTexture, "batMoveRight", "assets/enemy/bat/BatFlyIdle.png", {4, 1}, {32, 32}, {0, 0}, 12);
+        setupAnimation(moveLeftTexture, "batMoveLeft", "assets/enemy/bat/BatFlyIdle.png", {4, 1}, {32, 32}, {0, 0}, 12);
+        setupAnimation(moveUpTexture, "batMoveUp", "assets/enemy/bat/BatFlyIdle.png", {4, 1}, {32, 32}, {0, 0}, 12);
         sprite.setTexture(idleTexture);
 
         // Initialize random seed
@@ -48,13 +48,33 @@ public:
         sprite.move(offset);
     }
 
-    void update() {
+    void update(const TileMap &map) {
         // Walk around spawn point
         float distance = std::sqrt(std::pow(sprite.getPosition().x - spawnPoint.x, 2) + std::pow(sprite.getPosition().y - spawnPoint.y, 2));
         if (distance > 3.0f * tileSize || distance < tileSize) {
             direction = sf::Vector2f(static_cast<float>((std::rand() % 3) - 1) * tileSize, static_cast<float>((std::rand() % 3) - 1) * tileSize);
         }
-        sprite.move(direction * speed);
+
+        sf::Vector2f newPosition = sprite.getPosition() + direction * speed;
+
+        // Check collision for each direction individually
+        bool collision = false;
+
+        sf::Vector2f horizontalMove(newPosition.x, sprite.getPosition().y);
+        if (map.isCollision(horizontalMove, {32, 32})) {
+            collision = true;
+            direction.x = 0; // Cancel horizontal movement
+        }
+
+        sf::Vector2f verticalMove(sprite.getPosition().x, newPosition.y);
+        if (map.isCollision(verticalMove, {32, 32})) {
+            collision = true;
+            direction.y = 0; // Cancel vertical movement
+        }
+
+        if (!collision) {
+            sprite.setPosition(newPosition);
+        }
 
         // Update animation based on direction
         if (direction.x > 0) {

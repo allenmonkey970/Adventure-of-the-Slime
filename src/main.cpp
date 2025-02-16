@@ -69,7 +69,7 @@ int main() {
                 animationClock.restart();
                 mainSlime.updateAnimation();
             }
-
+            enemy.update(map);
             view.setCenter(mainSlime.getPosition());
             window.clear();
             window.setView(view);
