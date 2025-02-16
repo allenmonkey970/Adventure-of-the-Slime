@@ -1,4 +1,6 @@
 #pragma once
+#ifndef slime_H
+#define slime_H
 #include <SFML/Graphics.hpp>
 #include "AnimationManager.h"
 #include "tileMap.h"
@@ -86,3 +88,4 @@ private:
         }
     }
 };
+#endif

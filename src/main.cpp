@@ -75,6 +75,7 @@ int main() {
             window.setView(view);
             window.draw(map);
             mainSlime.draw(window);
+            enemy.draw(window);
             window.display();
         }
     } catch (const std::exception &e) {
