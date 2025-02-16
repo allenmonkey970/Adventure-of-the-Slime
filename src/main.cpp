@@ -1,5 +1,4 @@
 #include <SFML/Graphics.hpp>
-#include <SFML/Window/Keyboard.hpp>
 #include <SFML/Audio.hpp>
 #include "tileMap.h"
 #include "slime.h"
@@ -9,14 +8,20 @@
 #include <iostream>
 #include <stdexcept>
 
-void switchMap(TileMap& currentMap, const std::filesystem::path& mapFile, const std::filesystem::path& tilesetFile, const std::set<int>& collidableTiles, const std::string& musicFile);
-void handleEvents(sf::RenderWindow& window, sf::View& view);
-sf::Vector2f handleMovement(Slime& mainSlime, const TileMap& map, std::string& currentAnimation);
+//function prototypes
+void switchMap(TileMap &currentMap, const std::filesystem::path &mapFile, const std::filesystem::path &tilesetFile,
+               const std::set<int> &collidableTiles, const std::string &musicFile);
 
+void handleEvents(sf::RenderWindow &window, sf::View &view);
+
+sf::Vector2f handleMovement(Slime &mainSlime, const TileMap &map, std::string &currentAnimation);
+
+//global variables
 sf::Music backgroundMusic;
 
 int main() {
     try {
+        //window setup
         sf::RenderWindow window(sf::VideoMode({1920u, 1080u}), "Adventure of the Slime");
         window.setFramerateLimit(60);
         window.setVerticalSyncEnabled(true);
@@ -39,8 +44,11 @@ int main() {
 
         Slime mainSlime;
         mainSlime.setPosition(spawnPosition);
+
         enemy enemy;
         enemy.setPosition(spawnPosition + sf::Vector2f(100.f, 0.f));
+
+
         sf::View view(sf::FloatRect({0.f, 0.f}, {1920.f, 1080.f}));
         view.setCenter(mainSlime.getPosition());
         view.zoom(0.25f);
@@ -69,14 +77,15 @@ int main() {
             mainSlime.draw(window);
             window.display();
         }
-    } catch (const std::exception& e) {
+    } catch (const std::exception &e) {
         std::cerr << "An error occurred: " << e.what() << "\n";
     }
 
     return 0;
 }
 
-void switchMap(TileMap& currentMap, const std::filesystem::path& mapFile, const std::filesystem::path& tilesetFile, const std::set<int>& collidableTiles, const std::string& musicFile) {
+void switchMap(TileMap &currentMap, const std::filesystem::path &mapFile, const std::filesystem::path &tilesetFile,
+               const std::set<int> &collidableTiles, const std::string &musicFile) {
     try {
         if (!currentMap.loadFromFile(mapFile, tilesetFile, {32, 32}, collidableTiles)) {
             throw std::runtime_error("Failed to load tile map from file.");
@@ -92,12 +101,12 @@ void switchMap(TileMap& currentMap, const std::filesystem::path& mapFile, const 
             backgroundMusic.setLoopPoints({sf::milliseconds(500), sf::seconds(4)});
             backgroundMusic.play();
         }
-    } catch (const std::exception& e) {
+    } catch (const std::exception &e) {
         std::cerr << "An error occurred in switchMap: " << e.what() << "\n";
     }
 }
 
-void handleEvents(sf::RenderWindow& window, sf::View& view) {
+void handleEvents(sf::RenderWindow &window, sf::View &view) {
     try {
         while (const std::optional<sf::Event> event = window.pollEvent()) {
             if (event && event->is<sf::Event::Closed>()) {
@@ -105,14 +114,14 @@ void handleEvents(sf::RenderWindow& window, sf::View& view) {
             }
 
             if (event && event->is<sf::Event::Resized>()) {
-                const auto* resized = event->getIf<sf::Event::Resized>();
+                const auto *resized = event->getIf<sf::Event::Resized>();
                 sf::Vector2f newSize(static_cast<float>(resized->size.x), static_cast<float>(resized->size.y));
                 view.setSize(newSize);
                 view.zoom(0.3f);
                 window.setView(view);
             }
         }
-    } catch (const std::exception& e) {
+    } catch (const std::exception &e) {
         std::cerr << "An error occurred while handling events: " << e.what() << "\n";
     }
 }
