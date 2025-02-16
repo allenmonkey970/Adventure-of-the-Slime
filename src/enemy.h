@@ -5,8 +5,6 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-
-
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "AnimationManager.h"

@@ -29,7 +29,7 @@ public:
             return false;
         }
 
-        // Load the tileset texture
+        // Load the tileSet texture
         if (!m_tileset.loadFromFile(tileset))
         {
             std::cerr << "Failed to load tileset texture from file: " << tileset << "\n";

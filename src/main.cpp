@@ -151,7 +151,7 @@ sf::Vector2f handleMovement(Slime& mainSlime, const TileMap& map, std::string& c
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
             movement.y += verticalMoveSpeed;
             if (currentAnimation != "moveDown") {
-                mainSlime.setScale("moveDown", {1.f, 1.f});
+                mainSlime.setScale("moveDown", {.6f, .6f});
                 currentAnimation = "moveDown";
             }
             isMoving = true;
