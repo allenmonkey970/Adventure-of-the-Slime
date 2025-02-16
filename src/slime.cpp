@@ -10,7 +10,6 @@ sf::Vector2f Slime::handleMovement(const TileMap& map) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
             movement.x -= horizontalMoveSpeed;
             if (currentAnimation != "moveLeft") {
-                setScale("moveLeft", {1.f, 1.f});
                 currentAnimation = "moveLeft";
             }
             isMoving = true;
@@ -18,7 +17,6 @@ sf::Vector2f Slime::handleMovement(const TileMap& map) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
             movement.x += horizontalMoveSpeed;
             if (currentAnimation != "moveRight") {
-                setScale("moveRight", {1.f, 1.f});
                 currentAnimation = "moveRight";
             }
             isMoving = true;
@@ -26,7 +24,6 @@ sf::Vector2f Slime::handleMovement(const TileMap& map) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
             movement.y -= verticalMoveSpeed;
             if (currentAnimation != "moveUp") {
-                setScale("moveUp", {1.f, 1.f});
                 currentAnimation = "moveUp";
             }
             isMoving = true;
@@ -34,14 +31,12 @@ sf::Vector2f Slime::handleMovement(const TileMap& map) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
             movement.y += verticalMoveSpeed;
             if (currentAnimation != "moveDown") {
-                setScale("moveDown", {.6f, .6f});
                 currentAnimation = "moveDown";
             }
             isMoving = true;
         }
 
         if (!isMoving && currentAnimation != "idle") {
-            setScale("idle", {1.f, 1.f});
             currentAnimation = "idle";
         }
 

@@ -23,12 +23,6 @@ public:
         sprite.setTexture(idleTexture);
     }
 
-    void setScale(const std::string &animationName, const sf::Vector2f &scale) {
-        setTexture(animationName, scale);
-        currentAnimation = animationName;
-        AnimationManager::resetAnimationIndex(currentAnimation);
-    }
-
     void draw(sf::RenderWindow &window) {
         AnimationManager::update(currentAnimation, sprite);
         window.draw(sprite);
