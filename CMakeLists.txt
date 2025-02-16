@@ -24,6 +24,7 @@ add_executable(main
         src/SoundPlayer.h
         src/enemy.h
         assets/icon/icon.rc
+        src/slime.cpp
 )
 
 target_compile_features(main PRIVATE cxx_std_17)
