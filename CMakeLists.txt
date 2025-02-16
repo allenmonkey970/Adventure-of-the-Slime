@@ -22,6 +22,8 @@ add_executable(main
         src/AnimationManager.h
         src/SoundPlayer.cpp
         src/SoundPlayer.h
+        src/enemy.h
+        assets/icon/icon.rc
 )
 
 target_compile_features(main PRIVATE cxx_std_17)
