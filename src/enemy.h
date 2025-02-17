@@ -1,3 +1,6 @@
+#ifndef enemy_H
+#define enemy_H
+#include <cmath>
 class enemy {
 public:
     enemy(const std::string& enemyName, const std::string& idleAnim, const std::string& hitAnim, const std::string& deathAnim,
@@ -168,3 +171,4 @@ public:
                 "assets/enemy/bat/BatFlyIdle.png", "assets/enemy/bat/BatFlyIdle.png", "assets/enemy/bat/BatFlyIdle.png", "assets/enemy/bat/BatFlyIdle.png",
                 0.6f, 100.f) {}
 };
+#endif
