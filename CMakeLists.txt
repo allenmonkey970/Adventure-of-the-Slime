@@ -14,6 +14,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SFML)
 
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
 add_executable(main
         src/main.cpp
         src/AnimationManager.cpp
@@ -25,6 +27,8 @@ add_executable(main
         src/enemy.h
         assets/icon/icon.rc
         src/slime.cpp
+        src/utils.cpp
+        src/utils.h
 )
 
 target_compile_features(main PRIVATE cxx_std_17)
