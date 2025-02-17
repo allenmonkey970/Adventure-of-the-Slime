@@ -14,8 +14,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SFML)
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
-
 add_executable(main
         src/main.cpp
         src/AnimationManager.cpp
@@ -30,6 +28,7 @@ add_executable(main
         src/utils.cpp
         src/utils.h
 )
+set_target_properties(main PROPERTIES OUTPUT_NAME "AOFTS")
 
 target_compile_features(main PRIVATE cxx_std_17)
 
