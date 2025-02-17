@@ -6,6 +6,7 @@
 #include "AnimationManager.h"
 #include "tileMap.h"
 #include <iostream>
+#include <cmath>
 
 class Slime {
 public:
