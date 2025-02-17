@@ -9,11 +9,11 @@
 #include <stdexcept>
 #include <filesystem>
 #include <set>
-#include <shlobj.h>
 #include <fstream>
 
 #ifdef _WIN32
 #include <windows.h>
+#include <shlobj.h>
 #endif
 
 // Function prototypes
