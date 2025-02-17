@@ -13,7 +13,6 @@
 #include <fstream>
 
 // Function prototypes
-
 void switchMap(TileMap &currentMap, const std::filesystem::path &mapFile, const std::filesystem::path &tilesetFile,
                const std::set<int> &collidableTiles, const std::string &musicFile);
 
@@ -21,7 +20,10 @@ void handleEvents(sf::RenderWindow &window, sf::View &view);
 
 sf::Vector2f handleMovement(Slime &mainSlime, const TileMap &map, std::string &currentAnimation);
 
-void saveGame(const Slime &mainSlime, const BatEnemy &batEnemy, const TileMap &map);
+void saveGame(const Slime &mainSlime, const BatEnemy &batEnemy, const TileMap &map,
+              const std::filesystem::path &tilesetFile, sf::Vector2u tileSize, const std::set<int> &collidableTiles);
+
+void loadGame(Slime &mainSlime, BatEnemy &batEnemy, TileMap &map);
 
 sf::Music backgroundMusic;
 
@@ -40,6 +42,11 @@ int main() {
         const std::filesystem::path caveMapFile = "assets/maps/cave_map.txt";
         const std::filesystem::path caveTilesetFile = "assets/cave/tileSet.png";
         const std::string caveMusicFile = "assets/sound effects/caveMusic.mp3";
+
+        if (!std::filesystem::exists(caveMapFile)) {
+            throw std::runtime_error("Map file does not exist: " + caveMapFile.string());
+        }
+
         switchMap(map, caveMapFile, caveTilesetFile, collidableTiles, caveMusicFile);
 
         unsigned int spawnRow = 10;
@@ -56,6 +63,9 @@ int main() {
         sf::View view(sf::FloatRect({0.f, 0.f}, {1920.f, 1080.f}));
         view.setCenter(mainSlime.getPosition());
         view.zoom(0.25f);
+
+        // Load the game state
+        loadGame(mainSlime, batEnemy, map);
 
         sf::Clock animationClock;
         constexpr float animationUpdateInterval = 0.2f;
@@ -81,7 +91,7 @@ int main() {
             window.display();
         }
 
-        saveGame(mainSlime, batEnemy, map);
+        saveGame(mainSlime, batEnemy, map, caveTilesetFile, sf::Vector2u(32, 32), collidableTiles);
     } catch (const std::exception &e) {
         std::cerr << "An error occurred: " << e.what() << "\n";
     }
@@ -131,16 +141,23 @@ void handleEvents(sf::RenderWindow &window, sf::View &view) {
     }
 }
 
-void saveGame(const Slime &mainSlime, const BatEnemy &batEnemy, const TileMap &map) {
+void saveGame(const Slime &mainSlime, const BatEnemy &batEnemy, const TileMap &map, const std::filesystem::path &tilesetFile, sf::Vector2u tileSize, const std::set<int> &collidableTiles) {
     std::string path = GetLocalPath() + "/AdventureoftheSlime/data.txt";
     try {
         std::filesystem::create_directories(GetLocalPath() + "/AdventureoftheSlime"); // Ensure the directory is created
 
         std::ofstream outFile(path);
         if (outFile.is_open()) {
-            outFile << "Slime Position: " << mainSlime.getPosition().x << " " << mainSlime.getPosition().y << "\n";
-            outFile << "BatEnemy Position: " << batEnemy.getPosition().x << " " << batEnemy.getPosition().y << "\n";
-            outFile << "Map: " << map.getFilePath() << "\n";
+            outFile << mainSlime.getPosition().x << " " << mainSlime.getPosition().y << "\n";
+            outFile << batEnemy.getPosition().x << " " << batEnemy.getPosition().y << "\n";
+            outFile << map.getFilePath() << "\n";
+            outFile << tilesetFile.string() << "\n";
+            outFile << tileSize.x << " " << tileSize.y << "\n";
+            outFile << collidableTiles.size() << "\n";
+            for (int tile : collidableTiles) {
+                outFile << tile << " ";
+            }
+            outFile << "\n";
             outFile.close();
             std::cout << "Data saved to " << path << std::endl;
         } else {
@@ -148,5 +165,51 @@ void saveGame(const Slime &mainSlime, const BatEnemy &batEnemy, const TileMap &m
         }
     } catch (const std::exception &e) {
         std::cerr << "An error occurred while saving the game: " << e.what() << "\n";
+    }
+}
+
+void loadGame(Slime &mainSlime, BatEnemy &batEnemy, TileMap &map) {
+    std::string path = GetLocalPath() + "/AdventureoftheSlime/data.txt";
+    try {
+        std::ifstream inFile(path);
+        if (inFile.is_open()) {
+            sf::Vector2f slimePos, batEnemyPos;
+            std::string mapFilePath, tilesetFilePath;
+            sf::Vector2u tileSize;
+            size_t collidableTilesSize;
+            std::set<int> collidableTiles;
+
+            // Read and parse the data
+            inFile >> slimePos.x >> slimePos.y;
+            inFile >> batEnemyPos.x >> batEnemyPos.y;
+            inFile >> mapFilePath;
+            inFile >> tilesetFilePath;
+            inFile >> tileSize.x >> tileSize.y;
+            inFile >> collidableTilesSize;
+            for (size_t i = 0; i < collidableTilesSize; ++i) {
+                int tile;
+                inFile >> tile;
+                collidableTiles.insert(tile);
+            }
+
+            // Debug statements to print the paths
+            std::cout << "Map file path: " << mapFilePath << "\n";
+            std::cout << "Tileset file path: " << tilesetFilePath << "\n";
+
+            if (mapFilePath.empty() || tilesetFilePath.empty()) {
+                throw std::runtime_error("Map file path or tileset file path is empty");
+            }
+
+            mainSlime.setPosition(slimePos);
+            batEnemy.setPosition(batEnemyPos);
+            map.loadFromFile(mapFilePath, tilesetFilePath, tileSize, collidableTiles);
+
+            inFile.close();
+            std::cout << "Game loaded from " << path << std::endl;
+        } else {
+            throw std::runtime_error("Unable to open file for reading");
+        }
+    } catch (const std::exception &e) {
+        std::cerr << "An error occurred while loading the game: " << e.what() << "\n";
     }
 }
