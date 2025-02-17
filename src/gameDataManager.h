@@ -13,7 +13,7 @@
 
 class GameDataManager {
 public:
-    GameDataManager(const std::string &dataPath) : dataPath(dataPath) {}
+    explicit GameDataManager(std::string dataPath) : dataPath(std::move(dataPath)) {}
 
     void saveGame(const Slime &mainSlime, const BatEnemy &batEnemy, const TileMap &map,
                   const std::filesystem::path &tilesetFile, sf::Vector2u tileSize, const std::set<int> &collidableTiles) {
