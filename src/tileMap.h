@@ -161,8 +161,13 @@ public:
 
         m_width = width;
         m_height = height;
+        mapFilePath = mapFile; // Save the map file path
 
         return load(tileset, tileSize, tiles, width, height, collidableTiles);
+    }
+
+    std::string getFilePath() const {
+        return mapFilePath.string();
     }
 
     static sf::Vector2f getTilePosition(unsigned int row, unsigned int col, sf::Vector2u tileSize) {
@@ -187,6 +192,7 @@ private:
     std::vector<bool> m_collision;
     unsigned int m_width;
     unsigned int m_height;
+    std::filesystem::path mapFilePath; // Add this member variable
 };
 
 #endif // TILEMAP_H

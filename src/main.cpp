@@ -7,8 +7,18 @@
 #include "enemy.h"
 #include <iostream>
 #include <stdexcept>
+#include <filesystem>
+#include <set>
+#include <shlobj.h>
+#include <fstream>
 
-//function prototypes
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+// Function prototypes
+std::string GetLocalPath();
+
 void switchMap(TileMap &currentMap, const std::filesystem::path &mapFile, const std::filesystem::path &tilesetFile,
                const std::set<int> &collidableTiles, const std::string &musicFile);
 
@@ -16,12 +26,12 @@ void handleEvents(sf::RenderWindow &window, sf::View &view);
 
 sf::Vector2f handleMovement(Slime &mainSlime, const TileMap &map, std::string &currentAnimation);
 
-//global variables
+void saveGame(const Slime &mainSlime, const BatEnemy &batEnemy, const TileMap &map);
+
 sf::Music backgroundMusic;
 
 int main() {
     try {
-        //window setup
         sf::RenderWindow window(sf::VideoMode({1920u, 1080u}), "Adventure of the Slime");
         window.setFramerateLimit(60);
         window.setVerticalSyncEnabled(true);
@@ -48,7 +58,6 @@ int main() {
         BatEnemy batEnemy;
         batEnemy.setPosition(spawnPosition + sf::Vector2f(100.f, 0.f));
 
-
         sf::View view(sf::FloatRect({0.f, 0.f}, {1920.f, 1080.f}));
         view.setCenter(mainSlime.getPosition());
         view.zoom(0.25f);
@@ -57,12 +66,10 @@ int main() {
         constexpr float animationUpdateInterval = 0.2f;
         std::string currentAnimation = "idle";
 
-        bool mapSwitched = false;
-
         while (window.isOpen()) {
             handleEvents(window, view);
 
-            sf::Vector2f movement = mainSlime.handleMovement(map); // This is the movement function do not remove
+            sf::Vector2f movement = mainSlime.handleMovement(map);
 
             float animationDeltaTime = animationClock.getElapsedTime().asSeconds();
             if (animationDeltaTime >= animationUpdateInterval) {
@@ -78,11 +85,31 @@ int main() {
             batEnemy.draw(window);
             window.display();
         }
+
+        saveGame(mainSlime, batEnemy, map);
     } catch (const std::exception &e) {
         std::cerr << "An error occurred: " << e.what() << "\n";
     }
 
     return 0;
+}
+
+std::string GetLocalPath() {
+#ifdef _WIN32
+    char localPath[MAX_PATH];
+    if (SHGetFolderPathA(nullptr, CSIDL_LOCAL_APPDATA, nullptr, 0, localPath) == S_OK) {
+        return {localPath};
+    }
+    throw std::runtime_error("Failed to get Local AppData path.");
+#else
+    const char* homedir;
+    if ((homedir = getenv("HOME")) == NULL) {
+        homedir = getpwuid(getuid())->pw_dir;
+    }
+    std::string localShare(homedir);
+    localShare.append("/.local/share");
+    return localShare;
+#endif
 }
 
 void switchMap(TileMap &currentMap, const std::filesystem::path &mapFile, const std::filesystem::path &tilesetFile,
@@ -124,5 +151,25 @@ void handleEvents(sf::RenderWindow &window, sf::View &view) {
         }
     } catch (const std::exception &e) {
         std::cerr << "An error occurred while handling events: " << e.what() << "\n";
+    }
+}
+
+void saveGame(const Slime &mainSlime, const BatEnemy &batEnemy, const TileMap &map) {
+    std::string path = GetLocalPath() + "/AdventureoftheSlime/data.txt";
+    try {
+        std::filesystem::create_directories(GetLocalPath() + "/AdventureoftheSlime"); // Ensure the directory is created
+
+        std::ofstream outFile(path);
+        if (outFile.is_open()) {
+            outFile << "Slime Position: " << mainSlime.getPosition().x << " " << mainSlime.getPosition().y << "\n";
+            outFile << "BatEnemy Position: " << batEnemy.getPosition().x << " " << batEnemy.getPosition().y << "\n";
+            outFile << "Map: " << map.getFilePath() << "\n";
+            outFile.close();
+            std::cout << "Data saved to " << path << std::endl;
+        } else {
+            throw std::runtime_error("Unable to open file for writing");
+        }
+    } catch (const std::exception &e) {
+        std::cerr << "An error occurred while saving the game: " << e.what() << "\n";
     }
 }
