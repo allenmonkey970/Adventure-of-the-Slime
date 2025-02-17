@@ -1,9 +1,9 @@
 class enemy {
 public:
-    enemy(const std::string& idleAnim, const std::string& hitAnim, const std::string& deathAnim,
+    enemy(const std::string& enemyName, const std::string& idleAnim, const std::string& hitAnim, const std::string& deathAnim,
           const std::string& moveDownAnim, const std::string& moveRightAnim, const std::string& moveLeftAnim, const std::string& moveUpAnim,
           float spd, float detectRange)
-        : sprite(enemyIdleTexture), speed(spd), detectionRange(detectRange) { // Ensure sprite is initialized here
+        : sprite(enemyIdleTexture), speed(spd), detectionRange(detectRange), enemyName(enemyName) { // Ensure sprite is initialized here
         if (!enemyIdleTexture.loadFromFile(idleAnim)) {
             std::cerr << "Failed to load idle texture: " << idleAnim << "\n";
         }
@@ -26,20 +26,20 @@ public:
             std::cerr << "Failed to load move up texture: " << moveUpAnim << "\n";
         }
 
-        setupAnimation(enemyIdleTexture, "enemyIdle", idleAnim, {4, 1}, {32, 32}, {0, 0}, 10);
-        setupAnimation(enemyHitTexture, "enemyHit", hitAnim, {4, 4}, {32, 32}, {0, 0}, 6);
-        setupAnimation(enemyDeathTexture, "enemyDeath", deathAnim, {9, 1}, {32, 32}, {0, 0}, 4);
-        setupAnimation(enemyMoveDownTexture, "enemyMoveDown", moveDownAnim, {3, 1}, {32, 32}, {0, 0}, 7);
-        setupAnimation(enemyMoveRightTexture, "enemyMoveRight", moveRightAnim, {3, 1}, {32, 32}, {0, 0}, 6);
-        setupAnimation(enemyMoveLeftTexture, "enemyMoveLeft", moveLeftAnim, {3, 1}, {32, 32}, {0, 0}, 6);
-        setupAnimation(enemyMoveUpTexture, "enemyMoveUp", moveUpAnim, {3, 1}, {32, 32}, {0, 0}, 7);
+        setupAnimation(enemyIdleTexture, enemyName + "Idle", idleAnim, {4, 1}, {32, 32}, {0, 0}, 10);
+        setupAnimation(enemyHitTexture, enemyName + "Hit", hitAnim, {4, 4}, {32, 32}, {0, 0}, 6);
+        setupAnimation(enemyDeathTexture, enemyName + "Death", deathAnim, {9, 1}, {32, 32}, {0, 0}, 4);
+        setupAnimation(enemyMoveDownTexture, enemyName + "MoveDown", moveDownAnim, {3, 1}, {32, 32}, {0, 0}, 7);
+        setupAnimation(enemyMoveRightTexture, enemyName + "MoveRight", moveRightAnim, {3, 1}, {32, 32}, {0, 0}, 6);
+        setupAnimation(enemyMoveLeftTexture, enemyName + "MoveLeft", moveLeftAnim, {3, 1}, {32, 32}, {0, 0}, 6);
+        setupAnimation(enemyMoveUpTexture, enemyName + "MoveUp", moveUpAnim, {3, 1}, {32, 32}, {0, 0}, 7);
 
         // Set initial texture and position
         sprite.setTexture(enemyIdleTexture);
         std::srand(static_cast<unsigned int>(std::time(nullptr)));
         spawnPoint = sf::Vector2f(100.0f, 100.0f);
         sprite.setPosition(spawnPoint);
-        currentAnimation = "enemyIdle";
+        currentAnimation = enemyName + "Idle";
     }
 
     virtual void update(const TileMap &map, const sf::Vector2f &playerPosition) {
@@ -85,13 +85,13 @@ public:
         }
 
         if (direction.x > 0) {
-            setTexture("enemyMoveRight", {1.0f, 1.0f});
+            setTexture(enemyName + "MoveRight", {1.0f, 1.0f});
         } else if (direction.x < 0) {
-            setTexture("enemyMoveLeft", {1.0f, 1.0f});
+            setTexture(enemyName + "MoveLeft", {1.0f, 1.0f});
         } else if (direction.y > 0) {
-            setTexture("enemyMoveDown", {1.0f, 1.0f});
+            setTexture(enemyName + "MoveDown", {1.0f, 1.0f});
         } else if (direction.y < 0) {
-            setTexture("enemyMoveUp", {1.0f, 1.0f});
+            setTexture(enemyName + "MoveUp", {1.0f, 1.0f});
         }
 
         updateAnimation();
@@ -124,6 +124,7 @@ protected:
     sf::Texture enemyMoveLeftTexture;
     sf::Texture enemyMoveUpTexture;
     std::string currentAnimation;
+    std::string enemyName;
     sf::Vector2f spawnPoint;
     sf::Vector2f direction;
     float speed;
@@ -131,20 +132,20 @@ protected:
     float detectionRange;
 
     void setTexture(const std::string &animationName, const sf::Vector2f &scale) {
-        if (animationName == "enemyHit") {
+        if (animationName == enemyName + "Hit") {
             sprite.setTexture(enemyHitTexture);
-        } else if (animationName == "enemyIdle") {
+        } else if (animationName == enemyName + "Idle") {
             sprite.setTexture(enemyIdleTexture);
-        } else if (animationName == "enemyDeath") {
+        } else if (animationName == enemyName + "Death") {
             sprite.setTexture(enemyDeathTexture);
-        } else if (animationName == "enemyMoveDown") {
+        } else if (animationName == enemyName + "MoveDown") {
             sprite.setTexture(enemyMoveDownTexture);
-        } else if (animationName == "enemyMoveRight") {
+        } else if (animationName == enemyName + "MoveRight") {
             sprite.setTexture(enemyMoveRightTexture);
             sprite.setScale(scale);
-        } else if (animationName == "enemyMoveLeft") {
+        } else if (animationName == enemyName + "MoveLeft") {
             sprite.setTexture(enemyMoveLeftTexture);
-        } else if (animationName == "enemyMoveUp") {
+        } else if (animationName == enemyName + "MoveUp") {
             sprite.setTexture(enemyMoveUpTexture);
         }
     }
@@ -163,7 +164,7 @@ protected:
 class BatEnemy : public enemy {
 public:
     BatEnemy()
-        : enemy("assets/enemy/bat/BatFlyIdle.png", "assets/enemy/bat/BatAttack.png", "assets/enemy/bat/BatDie.png",
+        : enemy("Bat", "assets/enemy/bat/BatFlyIdle.png", "assets/enemy/bat/BatAttack.png", "assets/enemy/bat/BatDie.png",
                 "assets/enemy/bat/BatFlyIdle.png", "assets/enemy/bat/BatFlyIdle.png", "assets/enemy/bat/BatFlyIdle.png", "assets/enemy/bat/BatFlyIdle.png",
                 0.6f, 100.f) {}
 };
