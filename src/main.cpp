@@ -45,8 +45,8 @@ int main() {
         Slime mainSlime;
         mainSlime.setPosition(spawnPosition);
 
-        enemy enemy;
-        enemy.setPosition(spawnPosition + sf::Vector2f(100.f, 0.f));
+        BatEnemy batEnemy;
+        batEnemy.setPosition(spawnPosition + sf::Vector2f(100.f, 0.f));
 
 
         sf::View view(sf::FloatRect({0.f, 0.f}, {1920.f, 1080.f}));
@@ -69,13 +69,13 @@ int main() {
                 animationClock.restart();
                 mainSlime.updateAnimation();
             }
-            enemy.update(map);
+            batEnemy.update(map, mainSlime.getPosition());
             view.setCenter(mainSlime.getPosition());
             window.clear();
             window.setView(view);
             window.draw(map);
             mainSlime.draw(window);
-            enemy.draw(window);
+            batEnemy.draw(window);
             window.display();
         }
     } catch (const std::exception &e) {
