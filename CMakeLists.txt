@@ -27,6 +27,7 @@ add_executable(main
         src/slime.cpp
         src/utils.cpp
         src/utils.h
+        src/gameDataManager.h
 )
 set_target_properties(main PROPERTIES OUTPUT_NAME "AOFTS")
 
