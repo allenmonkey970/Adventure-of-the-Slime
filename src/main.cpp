@@ -127,7 +127,7 @@ void handleEvents(sf::RenderWindow &window, sf::View &view) {
                 const auto *resized = event->getIf<sf::Event::Resized>();
                 sf::Vector2f newSize(static_cast<float>(resized->size.x), static_cast<float>(resized->size.y));
                 view.setSize(newSize);
-                view.zoom(0.3f);
+                view.zoom(0.012f);
                 window.setView(view);
             }
         }

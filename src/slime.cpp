@@ -82,9 +82,9 @@ sf::Vector2f Slime::handleMovement(const TileMap& map) {
             sf::Vector2f characterPosition = getPosition();
             float angle = atan2(mousePosition.y - characterPosition.y, mousePosition.x - characterPosition.x);
 
-            if (angle > -M_PI_4 && angle < M_PI_4) {
+            if (angle > -0.785398163397448309616 && angle < 0.785398163397448309616) {
                 hit("right");
-            } else if (angle > M_PI_4 || angle < -M_PI_4) {
+            } else if (angle > 0.785398163397448309616 || angle < -0.785398163397448309616) {
                 hit("left");
             }
             isAttacking = true;
