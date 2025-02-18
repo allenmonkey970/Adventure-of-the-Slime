@@ -9,6 +9,8 @@
 #include <pwd.h>
 #endif
 
+
+// add mac os option
 std::string GetLocalPath() {
 #ifdef _WIN32
     char localPath[MAX_PATH];
