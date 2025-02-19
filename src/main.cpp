@@ -12,6 +12,7 @@
 #include <set>
 #include <fstream>
 #include "gameDataManager.h"
+
 // Function prototypes
 void switchMap(TileMap &currentMap, const std::filesystem::path &mapFile, const std::filesystem::path &tilesetFile,
                const std::set<int> &collidableTiles, const std::string &musicFile);
@@ -24,9 +25,8 @@ sf::Music backgroundMusic;
 
 int main() {
     try {
-        sf::RenderWindow window(sf::VideoMode({1920u, 1080u}), "Adventure of the Slime");
+        sf::RenderWindow window(sf::VideoMode({1920u, 1080u}), "Adventure of the Slime", sf::State::Fullscreen);
         window.setFramerateLimit(60);
-        window.setVerticalSyncEnabled(true);
 
         Icon icon;
         icon.draw(window);
@@ -57,7 +57,7 @@ int main() {
 
         sf::View view(sf::FloatRect({0.f, 0.f}, {1920.f, 1080.f}));
         view.setCenter(mainSlime.getPosition());
-        view.zoom(0.25f);
+        view.zoom(0.2f);
 
         GameDataManager gameDataManager(GetLocalPath());
         gameDataManager.loadGame(mainSlime, batEnemy, map);
@@ -77,7 +77,9 @@ int main() {
                 mainSlime.updateAnimation();
             }
             batEnemy.update(map, mainSlime.getPosition());
+
             view.setCenter(mainSlime.getPosition());
+
             window.clear();
             window.setView(view);
             window.draw(map);
@@ -127,7 +129,6 @@ void handleEvents(sf::RenderWindow &window, sf::View &view) {
                 const auto *resized = event->getIf<sf::Event::Resized>();
                 sf::Vector2f newSize(static_cast<float>(resized->size.x), static_cast<float>(resized->size.y));
                 view.setSize(newSize);
-                view.zoom(0.012f);
                 window.setView(view);
             }
         }
