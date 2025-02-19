@@ -127,9 +127,7 @@ void handleEvents(sf::RenderWindow &window, sf::View &view) {
 
             if (event && event->is<sf::Event::Resized>()) {
                 const auto *resized = event->getIf<sf::Event::Resized>();
-                sf::Vector2f newSize(static_cast<float>(resized->size.x), static_cast<float>(resized->size.y));
-                view.setSize(newSize);
-                window.setView(view);
+                sf::Vector2f newSize(static_cast<float>(resized->size.x), static_cast<float>(resized->size.y));;
             }
         }
     } catch (const std::exception &e) {
