@@ -1,7 +1,7 @@
 # [Adventure of the Slime](https://github.com/allenmonkey970/Adventure-of-the-Slime/tree/master)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![C++](https://img.shields.io/badge/-C++-blue?logo=cplusplus)
-![Last Updated](https://img.shields.io/badge/last%20updated-2025--05--1-brightgreen)
+![Last Updated](https://img.shields.io/badge/last%20updated-2025--05--01-brightgreen)
 
 Welcome to **Adventure of the Slime**, a personal, experimental game project designed to explore animation, assets, and sound integration using C++ and SFML. This project is a work-in-progress and **will not be completed**, but it serves as a foundation to learn and experiment with game development concepts.
 
