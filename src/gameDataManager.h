@@ -1,7 +1,5 @@
-#ifndef GAMEDATAMANAGER_H
-#define GAMEDATAMANAGER_H
+#pragma once
 #include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
 #include <filesystem>
 #include <set>
 #include <fstream>
@@ -15,75 +13,70 @@ class GameDataManager {
 public:
     explicit GameDataManager(std::string dataPath) : dataPath(std::move(dataPath)) {}
 
-    void saveGame(const Slime &mainSlime, const BatEnemy &batEnemy, const TileMap &map,
-                  const std::filesystem::path &tilesetFile, sf::Vector2u tileSize, const std::set<int> &collidableTiles) {
+    void saveGame(const Slime& mainSlime, const BatEnemy& batEnemy, const TileMap& map,
+                  const std::filesystem::path& tilesetFile, sf::Vector2u tileSize,
+                  const std::set<int>& collidableTiles) {
         try {
-            std::filesystem::create_directories(dataPath + "/AdventureoftheSlime");
+            std::filesystem::path savePath(dataPath + "/AdventureoftheSlime");
+            std::filesystem::create_directories(savePath);
 
-            std::ofstream outFile(dataPath + "/AdventureoftheSlime/data.txt");
-            if (outFile.is_open()) {
-                outFile << mainSlime.getPosition().x << " " << mainSlime.getPosition().y << "\n";
-                outFile << batEnemy.getPosition().x << " " << batEnemy.getPosition().y << "\n";
-                outFile << map.getFilePath() << "\n";
-                outFile << tilesetFile.string() << "\n";
-                outFile << tileSize.x << " " << tileSize.y << "\n";
-                outFile << collidableTiles.size() << "\n";
-                for (int tile : collidableTiles) {
-                    outFile << tile << " ";
-                }
-                outFile << "\n";
-                outFile.close();
-                std::cout << "Data saved to " << dataPath + "/AdventureoftheSlime/data.txt" << std::endl;
-            } else {
-                throw std::runtime_error("Unable to open file for writing");
-            }
-        } catch (const std::exception &e) {
-            std::cerr << "An error occurred while saving the game: " << e.what() << "\n";
+            std::ofstream out(savePath / "data.txt");
+            if (!out.is_open())
+                throw std::runtime_error("Unable to open save file for writing.");
+
+            out << mainSlime.getPosition().x  << " " << mainSlime.getPosition().y  << "\n";
+            out << batEnemy.getPosition().x   << " " << batEnemy.getPosition().y   << "\n";
+            out << map.getFilePath()          << "\n";
+            out << tilesetFile.string()       << "\n";
+            out << tileSize.x << " " << tileSize.y << "\n";
+            out << collidableTiles.size()     << "\n";
+            for (int tile : collidableTiles)
+                out << tile << " ";
+            out << "\n";
+        } catch (const std::exception& e) {
+            std::cerr << "Failed to save game: " << e.what() << "\n";
         }
     }
 
-    void loadGame(Slime &mainSlime, BatEnemy &batEnemy, TileMap &map) {
+    void loadGame(Slime& mainSlime, BatEnemy& batEnemy, TileMap& map) {
+        std::filesystem::path savePath(dataPath + "/AdventureoftheSlime/data.txt");
+        if (!std::filesystem::exists(savePath))
+            return;
+
         try {
-            std::ifstream inFile(dataPath + "/AdventureoftheSlime/data.txt");
-            if (inFile.is_open()) {
-                sf::Vector2f slimePos, batEnemyPos;
-                std::string mapFilePath, tilesetFilePath;
-                sf::Vector2u tileSize;
-                size_t collidableTilesSize;
-                std::set<int> collidableTiles;
+            std::ifstream in(savePath);
+            if (!in.is_open())
+                throw std::runtime_error("Unable to open save file for reading.");
 
-                inFile >> slimePos.x >> slimePos.y;
-                inFile >> batEnemyPos.x >> batEnemyPos.y;
-                inFile >> mapFilePath;
-                inFile >> tilesetFilePath;
-                inFile >> tileSize.x >> tileSize.y;
-                inFile >> collidableTilesSize;
-                for (size_t i = 0; i < collidableTilesSize; ++i) {
-                    int tile;
-                    inFile >> tile;
-                    collidableTiles.insert(tile);
-                }
+            sf::Vector2f slimePos, batPos;
+            std::string mapFilePath, tilesetFilePath;
+            sf::Vector2u tileSize;
+            size_t collidableTilesCount = 0;
+            std::set<int> collidableTiles;
 
-                if (mapFilePath.empty() || tilesetFilePath.empty()) {
-                    throw std::runtime_error("Map file path or tileset file path is empty");
-                }
-
-                mainSlime.setPosition(slimePos);
-                batEnemy.setPosition(batEnemyPos);
-                map.loadFromFile(mapFilePath, tilesetFilePath, tileSize, collidableTiles);
-
-                inFile.close();
-                std::cout << "Game loaded from " << dataPath + "/AdventureoftheSlime/data.txt" << std::endl;
-            } else {
-                throw std::runtime_error("Unable to open file for reading");
+            in >> slimePos.x >> slimePos.y;
+            in >> batPos.x   >> batPos.y;
+            in >> mapFilePath;
+            in >> tilesetFilePath;
+            in >> tileSize.x >> tileSize.y;
+            in >> collidableTilesCount;
+            for (size_t i = 0; i < collidableTilesCount; ++i) {
+                int tile;
+                in >> tile;
+                collidableTiles.insert(tile);
             }
-        } catch (const std::exception &e) {
-            std::cerr << "An error occurred while loading the game: " << e.what() << "\n";
+
+            if (mapFilePath.empty() || tilesetFilePath.empty())
+                throw std::runtime_error("Save file contains empty file paths.");
+
+            mainSlime.setPosition(slimePos);
+            batEnemy.setPosition(batPos);
+            map.loadFromFile(mapFilePath, tilesetFilePath, tileSize, collidableTiles);
+        } catch (const std::exception& e) {
+            std::cerr << "Failed to load game: " << e.what() << "\n";
         }
     }
 
 private:
     std::string dataPath;
 };
-
-#endif //GAMEDATAMANAGER_H

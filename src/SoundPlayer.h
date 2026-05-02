@@ -5,9 +5,6 @@
 #include <string>
 #include <iostream>
 
-// SoundPlayer soundPlayer;
-// soundPlayer.playSound("assets/sound effects/damage.wav");
-
 class SoundPlayer {
 public:
     SoundPlayer();

@@ -19,7 +19,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SFML)
 
-add_executable(main
+add_executable(AOFTS
         src/main.cpp
         src/AnimationManager.cpp
         src/SoundPlayer.cpp
@@ -27,11 +27,13 @@ add_executable(main
         src/utils.cpp
         assets/icon/icon.rc
 )
-set_target_properties(main PROPERTIES OUTPUT_NAME "AOFTS")
 
-target_compile_features(main PRIVATE cxx_std_17)
+target_compile_features(AOFTS PRIVATE cxx_std_17)
 
-# Link SFML libraries
-target_link_libraries(main PRIVATE sfml-graphics sfml-audio sfml-system)
+target_link_libraries(AOFTS PRIVATE sfml-graphics sfml-audio sfml-system)
 
-target_include_directories(main PRIVATE ${SFML_SOURCE_DIR}/include)
+add_custom_command(TARGET AOFTS POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/assets"
+        "$<TARGET_FILE_DIR:AOFTS>/assets"
+)
