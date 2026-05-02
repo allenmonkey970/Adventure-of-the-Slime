@@ -3,11 +3,16 @@ project(Adventure-of-the-Slime LANGUAGES CXX)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+# Set policy version to allow older CMake versions in dependencies (FreeType)
+if(POLICY CMP0150)
+    cmake_policy(SET CMP0150 NEW)
+endif()
+
 include(FetchContent)
 FetchContent_Declare(
         SFML
         GIT_REPOSITORY https://github.com/SFML/SFML.git
-        GIT_TAG 3.0.0
+        GIT_TAG 3.1.0
         GIT_SHALLOW ON
         EXCLUDE_FROM_ALL
         SYSTEM
@@ -17,17 +22,10 @@ FetchContent_MakeAvailable(SFML)
 add_executable(main
         src/main.cpp
         src/AnimationManager.cpp
-        src/icon.h
-        src/tileMap.h
-        src/AnimationManager.h
         src/SoundPlayer.cpp
-        src/SoundPlayer.h
-        src/enemy.h
-        assets/icon/icon.rc
         src/slime.cpp
         src/utils.cpp
-        src/utils.h
-        src/gameDataManager.h
+        assets/icon/icon.rc
 )
 set_target_properties(main PROPERTIES OUTPUT_NAME "AOFTS")
 
