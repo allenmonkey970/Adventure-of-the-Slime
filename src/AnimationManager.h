@@ -31,4 +31,6 @@ public:
     static void setAnimationStartingIndex(const std::string &animation, sf::Vector2i index);
     static void setAnimationEndingIndex(const std::string &animation, sf::Vector2i index);
     static void resetAnimationIndex(const std::string &animation);
+    static void applyFirstFrame(const std::string &animation, sf::Sprite &sprite);
+    static sf::Vector2i getSpriteSize(const std::string &animation);
 };

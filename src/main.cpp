@@ -56,7 +56,10 @@ int main() {
         constexpr unsigned int spawnRow = 10;
         constexpr unsigned int spawnCol = 14;
         const sf::Vector2u     tileSize(32, 32);
-        sf::Vector2f spawnPosition = TileMap::getTilePosition(spawnRow, spawnCol, tileSize);
+        // getTilePosition returns the tile's top-left corner; offset by half a tile so the
+        // slime's visual centre (its sprite origin) lands in the middle of the spawn tile.
+        sf::Vector2f spawnPosition = TileMap::getTilePosition(spawnRow, spawnCol, tileSize)
+                                     + sf::Vector2f(tileSize.x / 2.f, tileSize.y / 2.f);
 
         Slime mainSlime;
         mainSlime.setPosition(spawnPosition);
@@ -71,19 +74,12 @@ int main() {
         GameDataManager gameDataManager(GetLocalPath());
         gameDataManager.loadGame(mainSlime, batEnemy, map);
 
-        sf::Clock animationClock;
-        constexpr float animationUpdateInterval = 0.2f;
-
         while (window.isOpen()) {
             handleEvents(window);
 
             mainSlime.handleMovement(map, window);
             batEnemy.update(map, mainSlime.getPosition());
-
-            if (animationClock.getElapsedTime().asSeconds() >= animationUpdateInterval) {
-                animationClock.restart();
-                mainSlime.updateAnimation();
-            }
+            mainSlime.updateAnimation();
 
             view.setCenter(mainSlime.getPosition());
 

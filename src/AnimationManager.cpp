@@ -93,10 +93,26 @@ void AnimationManager::resetAnimationIndex(const std::string &animation) {
     m_indices[animation] = m_startingIndices[animation];
 }
 
+void AnimationManager::applyFirstFrame(const std::string &animation, sf::Sprite &sprite) {
+    if (m_spriteSizes.count(animation) == 0)
+        return;
+    m_indices[animation]      = m_startingIndices[animation];
+    m_timesUpdated[animation] = 0;
+    const sf::Vector2i& idx  = m_indices[animation];
+    const sf::Vector2i& sz   = m_spriteSizes[animation];
+    sprite.setTexture(m_textures[animation]);
+    sprite.setTextureRect(sf::IntRect({idx.x * sz.x, idx.y * sz.y}, {sz.x, sz.y}));
+}
+
 void AnimationManager::setAnimationStartingIndex(const std::string &animation, sf::Vector2i index) {
     m_startingIndices[animation] = index;
 }
 
 void AnimationManager::setAnimationEndingIndex(const std::string &animation, sf::Vector2i index) {
     m_endingIndices[animation] = index;
+}
+
+sf::Vector2i AnimationManager::getSpriteSize(const std::string &animation) {
+    auto it = m_spriteSizes.find(animation);
+    return it != m_spriteSizes.end() ? it->second : sf::Vector2i{0, 0};
 }
